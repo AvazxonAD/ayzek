@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(/D:\\projects\\certificate\\certificate_backend/**)",
+      "Read(/D:\\projects\\certificate\\certificate_backend/**)",
+      "Read(/D:\\projects\\certificate\\certificate_backend\\src/**)",
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "Read(/D:\\projects\\certificate\\certificate_backend/**)",
+      "Read(/D:\\projects\\certificate\\certificate_backend/**)",
+      "Read(/D:\\projects\\certificate\\certificate_backend\\src\\apps\\auth/**)",
+      "Read(/D:\\projects\\certificate\\certificate_backend\\src\\apps\\auth/**)",
+      "Read(/D:\\projects\\certificate\\certificate_backend\\src\\apps\\auth/**)",
+      "Read(/D:\\projects\\certificate\\certificate_backend\\src\\apps\\auth/**)",
+      "Read(/D:\\projects\\certificate\\certificate_backend\\src\\apps\\auth/**)",
+      "Bash(node:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

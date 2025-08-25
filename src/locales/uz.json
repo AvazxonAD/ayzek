@@ -1,0 +1,127 @@
+{
+  "validation": {
+    "username": {
+      "min": "Username kamida 3 ta belgi bo'lishi kerak",
+      "max": "Username 50 ta belgidan oshmasligi kerak",
+      "required": "Username majburiy maydon"
+    },
+    "password": {
+      "min": "Parol bo'sh bo'lmasligi kerak",
+      "min_register": "Parol kamida 3 ta belgi bo'lishi kerak",
+      "required": "Parol majburiy maydon"
+    },
+    "fio": {
+      "min": "FIO kamida 2 ta belgi bo'lishi kerak",
+      "max": "FIO 100 ta belgidan oshmasligi kerak",
+      "required": "FIO majburiy maydon"
+    },
+    "name": {
+      "min": "Nom kamida 1 ta belgidan iborat bo'lishi kerak",
+      "max": "Nom ko'pi bilan 255 ta belgidan iborat bo'lishi kerak",
+      "required": "Nom maydoni majburiy"
+    },
+    "id": {
+      "type": "ID raqam bo'lishi kerak",
+      "integer": "ID butun son bo'lishi kerak",
+      "min": "ID 1 dan katta bo'lishi kerak",
+      "required": "ID majburiy parametr",
+      "positive": "ID musbat son bo'lishi kerak"
+    },
+    "page": {
+      "min": "Sahifa raqami 1 dan kam bo'lmasligi kerak",
+      "invalid": "Sahifa raqami noto'g'ri"
+    },
+    "limit": {
+      "min": "Limit 1 dan kam bo'lmasligi kerak",
+      "max": "Limit 100 dan oshmasligi kerak",
+      "invalid": "Limit qiymati noto'g'ri"
+    },
+    "title": {
+      "min": "Sarlavha kamida 1 ta belgidan iborat bo'lishi kerak",
+      "max": "Sarlavha ko'pi bilan 255 ta belgidan iborat bo'lishi kerak",
+      "required": "Sarlavha maydoni majburiy"
+    },
+    "description": {
+      "invalid": "Tavsif noto'g'ri formatda"
+    },
+    "content": {
+      "min": "Kontent bo'sh bo'lmasligi kerak",
+      "required": "Kontent maydoni majburiy"
+    },
+    "category_id": {
+      "positive": "Kategoriya ID musbat son bo'lishi kerak",
+      "invalid": "Kategoriya ID noto'g'ri"
+    },
+    "tags": {
+      "invalid": "Teglar noto'g'ri formatda"
+    },
+    "fio": {
+      "min": "FIO kamida 1 ta belgidan iborat bo'lishi kerak",
+      "max": "FIO ko'pi bilan 255 ta belgidan iborat bo'lishi kerak",
+      "required": "FIO maydoni majburiy"
+    },
+    "update": {
+      "min_fields": "Yangilash uchun kamida bitta maydon talab qilinadi"
+    },
+    "filename": {
+      "required": "Fayl nomi majburiy",
+      "invalid": "Fayl nomi noto'g'ri formatda (faqat jpg, png, gif, webp ruxsat etilgan)"
+    }
+  },
+  "auth": {
+    "login_success": "Login muvaffaqiyatli",
+    "login_error": "Login xatosi",
+    "register_success": "Foydalanuvchi muvaffaqiyatli yaratildi",
+    "register_error": "Register xatosi",
+    "profile_error": "Profile olishda xato",
+    "user_updated": "Foydalanuvchi yangilandi",
+    "user_update_error": "Foydalanuvchini yangilashda xato",
+    "user_deleted": "Foydalanuvchi o'chirildi",
+    "user_delete_error": "Foydalanuvchini o'chirishda xato",
+    "users_fetch_error": "Foydalanuvchilarni olishda xato",
+    "token_valid": "Token yaroqli",
+    "token_invalid": "Token yaroqsiz",
+    "token_not_found": "Token topilmadi",
+    "unauthorized": "Ruxsat berilmagan",
+    "user_not_found": "Foydalanuvchi topilmadi",
+    "user_blocked": "Foydalanuvchi bloklangan",
+    "wrong_password": "Noto'g'ri parol",
+    "username_exists": "Bu username allaqachon mavjud",
+    "token_creation_error": "Token yaratilmadi",
+    "admin_required": "Admin huquqi talab qilinadi",
+    "server_error": "Server xatosi"
+  },
+  "category": {
+    "get_all_success": "Kategoriyalar muvaffaqiyatli olindi",
+    "get_success": "Kategoriya muvaffaqiyatli olindi",
+    "create_success": "Kategoriya muvaffaqiyatli yaratildi",
+    "update_success": "Kategoriya muvaffaqiyatli yangilandi",
+    "delete_success": "Kategoriya muvaffaqiyatli o'chirildi",
+    "not_found": "Kategoriya topilmadi"
+  },
+  "tag": {
+    "get_all_success": "Teglar muvaffaqiyatli olindi",
+    "get_success": "Teg muvaffaqiyatli olindi",
+    "create_success": "Teg muvaffaqiyatli yaratildi",
+    "update_success": "Teg muvaffaqiyatli yangilandi",
+    "delete_success": "Teg muvaffaqiyatli o'chirildi",
+    "not_found": "Teg topilmadi"
+  },
+  "post": {
+    "get_all_success": "Postlar muvaffaqiyatli olindi",
+    "get_success": "Post muvaffaqiyatli olindi",
+    "create_success": "Post muvaffaqiyatli yaratildi",
+    "update_success": "Post muvaffaqiyatli yangilandi",
+    "delete_success": "Post muvaffaqiyatli o'chirildi",
+    "not_found": "Post topilmadi"
+  },
+  "userPanel": {
+    "get_all_success": "Postlar muvaffaqiyatli olindi",
+    "get_success": "Post muvaffaqiyatli olindi"
+  },
+  "common": {
+    "success": "Muvaffaqiyatli",
+    "error": "Xatolik yuz berdi",
+    "internal_server_error": "Server xatosi"
+  }
+}

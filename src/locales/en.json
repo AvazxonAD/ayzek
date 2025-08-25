@@ -1,0 +1,127 @@
+{
+  "validation": {
+    "username": {
+      "min": "Username must be at least 3 characters long",
+      "max": "Username must not exceed 50 characters",
+      "required": "Username is required"
+    },
+    "password": {
+      "min": "Password cannot be empty",
+      "min_register": "Password must be at least 3 characters long",
+      "required": "Password is required"
+    },
+    "fio": {
+      "min": "Full name must be at least 2 characters long",
+      "max": "Full name must not exceed 100 characters",
+      "required": "Full name is required"
+    },
+    "name": {
+      "min": "Name must be at least 1 character long",
+      "max": "Name must not exceed 255 characters",
+      "required": "Name is required"
+    },
+    "id": {
+      "type": "ID must be a number",
+      "integer": "ID must be an integer",
+      "min": "ID must be greater than 1",
+      "required": "ID is required parameter",
+      "positive": "ID must be a positive number"
+    },
+    "page": {
+      "min": "Page number must be at least 1",
+      "invalid": "Invalid page number"
+    },
+    "limit": {
+      "min": "Limit must be at least 1",
+      "max": "Limit must not exceed 100",
+      "invalid": "Invalid limit value"
+    },
+    "title": {
+      "min": "Title must be at least 1 character long",
+      "max": "Title must not exceed 255 characters",
+      "required": "Title is required"
+    },
+    "description": {
+      "invalid": "Invalid description format"
+    },
+    "content": {
+      "min": "Content cannot be empty",
+      "required": "Content is required"
+    },
+    "category_id": {
+      "positive": "Category ID must be a positive number",
+      "invalid": "Invalid category ID"
+    },
+    "tags": {
+      "invalid": "Invalid tags format"
+    },
+    "fio": {
+      "min": "Full name must be at least 1 character long",
+      "max": "Full name must not exceed 255 characters",
+      "required": "Full name is required"
+    },
+    "update": {
+      "min_fields": "At least one field is required for update"
+    },
+    "filename": {
+      "required": "Filename is required",
+      "invalid": "Invalid filename format (only jpg, png, gif, webp allowed)"
+    }
+  },
+  "auth": {
+    "login_success": "Login successful",
+    "login_error": "Login error",
+    "register_success": "User created successfully",
+    "register_error": "Registration error",
+    "profile_error": "Error fetching profile",
+    "user_updated": "User updated",
+    "user_update_error": "Error updating user",
+    "user_deleted": "User deleted",
+    "user_delete_error": "Error deleting user",
+    "users_fetch_error": "Error fetching users",
+    "token_valid": "Token is valid",
+    "token_invalid": "Token is invalid",
+    "token_not_found": "Token not found",
+    "unauthorized": "Unauthorized",
+    "user_not_found": "User not found",
+    "user_blocked": "User is blocked",
+    "wrong_password": "Wrong password",
+    "username_exists": "This username already exists",
+    "token_creation_error": "Token not created",
+    "admin_required": "Admin rights required",
+    "server_error": "Server error"
+  },
+  "category": {
+    "get_all_success": "Categories retrieved successfully",
+    "get_success": "Category retrieved successfully",
+    "create_success": "Category created successfully",
+    "update_success": "Category updated successfully",
+    "delete_success": "Category deleted successfully",
+    "not_found": "Category not found"
+  },
+  "tag": {
+    "get_all_success": "Tags retrieved successfully",
+    "get_success": "Tag retrieved successfully",
+    "create_success": "Tag created successfully",
+    "update_success": "Tag updated successfully",
+    "delete_success": "Tag deleted successfully",
+    "not_found": "Tag not found"
+  },
+  "post": {
+    "get_all_success": "Posts retrieved successfully",
+    "get_success": "Post retrieved successfully",
+    "create_success": "Post created successfully",
+    "update_success": "Post updated successfully",
+    "delete_success": "Post deleted successfully",
+    "not_found": "Post not found"
+  },
+  "userPanel": {
+    "get_all_success": "Posts retrieved successfully",
+    "get_success": "Post retrieved successfully"
+  },
+  "common": {
+    "success": "Success",
+    "error": "An error occurred",
+    "internal_server_error": "Internal Server Error"
+  }
+}
