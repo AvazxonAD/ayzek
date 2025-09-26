@@ -1,20 +1,30 @@
 const { db } = require("../../config/db/index");
 
 class PostDB {
+  static async updateSeeCount(params) {
+    const query = `UPDATE posts SET see = see + 1 WHERE id = $1 RETURNING *`;
+
+    const result = await db.query(query, params);
+
+    return result[0];
+  }
+
   static async findAll(page = 1, limit = 10) {
     const offset = (page - 1) * limit;
-    
+
     const [result, countResult] = await Promise.all([
-      db.query(`
-        SELECT p.id, p.title, p.description, p.content, p.image, p.category_id, 
-               p.tags, p.fio, p.is_active, p.created_at, p.updated_at,
+      db.query(
+        `
+        SELECT p.*,
                c.name as category_name
         FROM posts p
         LEFT JOIN categories c ON p.category_id = c.id
         ORDER BY p.created_at DESC
         LIMIT $1 OFFSET $2
-      `, [limit, offset]),
-      db.query(`SELECT COUNT(*) as total FROM posts`)
+      `,
+        [limit, offset]
+      ),
+      db.query(`SELECT COUNT(*) as total FROM posts`),
     ]);
 
     const total = parseInt(countResult[0].total);
@@ -28,30 +38,35 @@ class PostDB {
         total,
         totalPages,
         hasNext: page < totalPages,
-        hasPrev: page > 1
-      }
+        hasPrev: page > 1,
+      },
     };
   }
 
   static async findById(id) {
-    const result = await db.query(`
-      SELECT p.id, p.title, p.description, p.content, p.image, p.category_id, 
-             p.tags, p.fio, p.is_active, p.created_at, p.updated_at,
+    const result = await db.query(
+      `
+      SELECT p.*,
              c.name as category_name
       FROM posts p
       LEFT JOIN categories c ON p.category_id = c.id
       WHERE p.id = $1
-    `, [id]);
+    `,
+      [id]
+    );
     return result[0] || null;
   }
 
   static async create(data) {
     const { title, description, content, image, category_id, tags, fio, is_active = true } = data;
-    const result = await db.query(`
+    const result = await db.query(
+      `
       INSERT INTO posts (title, description, content, image, category_id, tags, fio, is_active, created_at, updated_at) 
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW()) 
       RETURNING id, title, description, content, image, category_id, tags, fio, is_active, created_at, updated_at
-    `, [title, description, content, image, category_id, tags, fio, is_active]);
+    `,
+      [title, description, content, image, category_id, tags, fio, is_active]
+    );
     return result[0];
   }
 
@@ -105,7 +120,7 @@ class PostDB {
 
     const query = `
       UPDATE posts 
-      SET ${fields.join(', ')} 
+      SET ${fields.join(", ")} 
       WHERE id = $${paramIndex} 
       RETURNING id, title, description, content, image, category_id, tags, fio, is_active, created_at, updated_at
     `;
@@ -115,11 +130,14 @@ class PostDB {
   }
 
   static async delete(id) {
-    const result = await db.query(`
+    const result = await db.query(
+      `
       DELETE FROM posts 
       WHERE id = $1 
       RETURNING id
-    `, [id]);
+    `,
+      [id]
+    );
     return result[0] || null;
   }
 }

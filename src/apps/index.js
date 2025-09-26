@@ -4,6 +4,7 @@ const categoryRoutes = require("./category");
 const tagRoutes = require("./tag");
 const postRoutes = require("./post");
 const userPanelRoutes = require("./userPanel");
+const StorageRoutes = require("./storage");
 
 const router = express.Router();
 
@@ -13,5 +14,6 @@ router.use("/category", categoryRoutes);
 router.use("/teg", tagRoutes);
 router.use("/post", postRoutes);
 router.use("/public", userPanelRoutes);
+router.use("/storage", StorageRoutes);
 
 module.exports = router;

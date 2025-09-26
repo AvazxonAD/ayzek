@@ -1,0 +1,7 @@
+CREATE TABLE storage(
+    id SERIAL PRIMARY KEY NOT NULL,
+    file VARCHAR NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL,
+    isdeleted BOOLEAN DEFAULT FALSE
+);

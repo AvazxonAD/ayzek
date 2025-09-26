@@ -22,9 +22,11 @@ class PostService {
       throw new ErrorResponse("post.not_found", 404);
     }
 
-    // Add baseUrl to image path using API endpoint
     const baseUrl = process.env.BASE_URL;
     post.image = post.image ? `${baseUrl}/post/image/${post.image}` : null;
+
+    const { see } = await PostDB.updateSeeCount([post.id]);
+    post.see = see;
 
     return post;
   }
