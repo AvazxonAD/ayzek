@@ -5,6 +5,7 @@ const tagRoutes = require("./tag");
 const postRoutes = require("./post");
 const userPanelRoutes = require("./userPanel");
 const StorageRoutes = require("./storage");
+const AccountRoutes = require("./account/index");
 
 const router = express.Router();
 
@@ -15,5 +16,6 @@ router.use("/teg", tagRoutes);
 router.use("/post", postRoutes);
 router.use("/public", userPanelRoutes);
 router.use("/storage", StorageRoutes);
+router.use("/account", AccountRoutes);
 
 module.exports = router;
