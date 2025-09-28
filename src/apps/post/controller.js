@@ -23,7 +23,7 @@ class PostController {
       postData.image = req.file.filename;
     }
 
-    const result = await PostService.createPost(postData);
+    const result = await PostService.create(postData);
     return res.success(result, req.t("post.create_success"));
   }
 

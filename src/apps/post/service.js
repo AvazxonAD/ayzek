@@ -6,7 +6,6 @@ class PostService {
   static async getAllPosts(page = 1, limit = 10) {
     const result = await PostDB.findAll(page, limit);
 
-    // Add baseUrl to image paths using API endpoint
     const baseUrl = process.env.BASE_URL;
     result.data = result.data.map((post) => ({
       ...post,
@@ -31,15 +30,13 @@ class PostService {
     return post;
   }
 
-  static async createPost(data) {
-    // Check if category exists if category_id is provided
+  static async create(data) {
     if (data.category_id) {
       await CategoryService.getCategoryById(data.category_id);
     }
 
     const post = await PostDB.create(data);
 
-    // Add baseUrl to image path using API endpoint
     const baseUrl = process.env.BASE_URL;
     post.image = post.image ? `${baseUrl}/post/image/${post.image}` : null;
 
@@ -52,14 +49,12 @@ class PostService {
       throw new ErrorResponse("post.not_found", 404);
     }
 
-    // Check if category exists if category_id is provided
     if (data.category_id) {
       await CategoryService.getCategoryById(data.category_id);
     }
 
     const post = await PostDB.update(id, data);
 
-    // Add baseUrl to image path using API endpoint
     const baseUrl = process.env.BASE_URL;
     post.image = post.image ? `${baseUrl}/post/image/${post.image}` : null;
 

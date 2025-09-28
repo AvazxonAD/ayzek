@@ -6,6 +6,7 @@ const postRoutes = require("./post");
 const userPanelRoutes = require("./userPanel");
 const StorageRoutes = require("./storage");
 const AccountRoutes = require("./account/index");
+const CommentRoutes = require("./comment/index");
 
 const router = express.Router();
 
@@ -17,5 +18,6 @@ router.use("/post", postRoutes);
 router.use("/public", userPanelRoutes);
 router.use("/storage", StorageRoutes);
 router.use("/account", AccountRoutes);
+router.use("/comment", CommentRoutes);
 
 module.exports = router;

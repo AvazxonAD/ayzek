@@ -15,8 +15,9 @@ class PostDB {
     const [result, countResult] = await Promise.all([
       db.query(
         `
-        SELECT p.*,
-               c.name as category_name
+        SELECT
+          p.*,
+          c.name as category_name
         FROM posts p
         LEFT JOIN categories c ON p.category_id = c.id
         ORDER BY p.created_at DESC
@@ -58,14 +59,14 @@ class PostDB {
   }
 
   static async create(data) {
-    const { title, description, content, image, category_id, tags, fio, is_active = true } = data;
+    const { title, description, content, image, category_id, tags, fio, gif, video } = data;
     const result = await db.query(
       `
-      INSERT INTO posts (title, description, content, image, category_id, tags, fio, is_active, created_at, updated_at) 
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW()) 
-      RETURNING id, title, description, content, image, category_id, tags, fio, is_active, created_at, updated_at
+      INSERT INTO posts (title, description, content, image, category_id, tags, fio, gif, video, created_at, updated_at) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW(), NOW()) 
+      RETURNING *
     `,
-      [title, description, content, image, category_id, tags, fio, is_active]
+      [title, description, content, image, category_id, tags, fio, gif, video]
     );
     return result[0];
   }
