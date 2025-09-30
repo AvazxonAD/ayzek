@@ -20,12 +20,13 @@ class PostDB {
           c.name as category_name
         FROM posts p
         LEFT JOIN categories c ON p.category_id = c.id
+        WHERE p.is_active = true
         ORDER BY p.created_at DESC
         LIMIT $1 OFFSET $2
       `,
         [limit, offset]
       ),
-      db.query(`SELECT COUNT(*) as total FROM posts`),
+      db.query(`SELECT COUNT(*) as total FROM posts WHERE is_active = true`),
     ]);
 
     const total = parseInt(countResult[0].total);
@@ -52,6 +53,7 @@ class PostDB {
       FROM posts p
       LEFT JOIN categories c ON p.category_id = c.id
       WHERE p.id = $1
+        AND p.is_active = true
     `,
       [id]
     );
@@ -143,7 +145,8 @@ class PostDB {
   static async delete(id) {
     const result = await db.query(
       `
-      DELETE FROM posts 
+      UPDATE posts
+      SET is_active = false 
       WHERE id = $1 
       RETURNING id
     `,
