@@ -33,7 +33,7 @@ const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     if (file.mimetype.startsWith("image/") && file.mimetype !== "image/gif") {
       cb(null, "./public/uploads/images");
-    } else if (file.mimetype === "image/gif") {
+    } else if (file.mimetype === "image/gif" || file.mimetype === "video/webm") {
       cb(null, "./public/uploads/gifs");
     } else if (file.mimetype.startsWith("video/")) {
       cb(null, "./public/uploads/videos");
