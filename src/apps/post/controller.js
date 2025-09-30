@@ -1,6 +1,7 @@
 const { PostService } = require("./service");
 const path = require("path");
 const fs = require("fs");
+const mime = require("mime-types");
 
 class PostController {
   static async getAll(req, res) {
@@ -18,12 +19,7 @@ class PostController {
   static async create(req, res) {
     const postData = { ...req.body };
 
-    // Add image filename if uploaded
-    if (req.file) {
-      postData.image = req.file.filename;
-    }
-
-    const result = await PostService.create(postData);
+    const result = await PostService.create({ ...postData, image: req.files.image, video: req.files.video, gif: req.files.gif });
     return res.success(result, req.t("post.create_success"));
   }
 
@@ -46,51 +42,21 @@ class PostController {
     return res.success(result, req.t("post.delete_success"));
   }
 
-  static async getImage(req, res) {
-    const { filename } = req.params;
+  static async getFile(req, res) {
+    const { filename, file } = req.params;
 
-    try {
-      const imagePath = path.join(process.cwd(), "public", "uploads", "images", filename);
+    const imagePath = path.join(process.cwd(), "public", "uploads", file, filename);
 
-      // Check if file exists
-      if (!fs.existsSync(imagePath)) {
-        return res.status(404).json({
-          success: false,
-          message: "Image not found",
-        });
-      }
-
-      // Get file extension to set correct content type
-      const ext = path.extname(filename).toLowerCase();
-      let contentType = "image/jpeg"; // default
-
-      switch (ext) {
-        case ".png":
-          contentType = "image/png";
-          break;
-        case ".gif":
-          contentType = "image/gif";
-          break;
-        case ".webp":
-          contentType = "image/webp";
-          break;
-        case ".jpg":
-        case ".jpeg":
-          contentType = "image/jpeg";
-          break;
-      }
-
-      res.setHeader("Content-Type", contentType);
-      res.setHeader("Cache-Control", "public, max-age=31536000"); // 1 year cache
-
-      // Send file
-      return res.sendFile(imagePath);
-    } catch (error) {
-      return res.status(500).json({
-        success: false,
-        message: "Error serving image",
-      });
+    console.log(imagePath);
+    if (!fs.existsSync(imagePath)) {
+      return res.error(req.t("file_not_found"), 404);
     }
+
+    const content_type = mime.lookup(filename);
+
+    res.setHeader("Content-Type", content_type);
+
+    return res.sendFile(imagePath);
   }
 }
 

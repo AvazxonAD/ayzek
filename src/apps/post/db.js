@@ -66,7 +66,17 @@ class PostDB {
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW(), NOW()) 
       RETURNING *
     `,
-      [title, description, content, image, category_id, tags, fio, gif, video]
+      [
+        title,
+        description,
+        content,
+        image ? image[0].filename : null,
+        category_id,
+        tags,
+        fio,
+        gif ? gif[0].filename : null,
+        video ? video[0].filename : null,
+      ]
     );
     return result[0];
   }

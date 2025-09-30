@@ -9,7 +9,7 @@ class PostService {
     const baseUrl = process.env.BASE_URL;
     result.data = result.data.map((post) => ({
       ...post,
-      image: post.image ? `${baseUrl}/post/image/${post.image}` : null,
+      image: post.image ? `${baseUrl}/post/images/${post.image}` : null,
     }));
 
     return result;
@@ -22,7 +22,7 @@ class PostService {
     }
 
     const baseUrl = process.env.BASE_URL;
-    post.image = post.image ? `${baseUrl}/post/image/${post.image}` : null;
+    post.image = post.image ? `${baseUrl}/post/images/${post.image}` : null;
 
     const { see } = await PostDB.updateSeeCount([post.id]);
     post.see = see;
@@ -38,7 +38,10 @@ class PostService {
     const post = await PostDB.create(data);
 
     const baseUrl = process.env.BASE_URL;
-    post.image = post.image ? `${baseUrl}/post/image/${post.image}` : null;
+
+    post.image = post.image ? `${baseUrl}/post/images/${post.image}` : null;
+    post.video = post.video ? `${baseUrl}/post/videos/${post.video}` : null;
+    post.gif = post.gif ? `${baseUrl}/post/gifs/${post.gif}` : null;
 
     return post;
   }
@@ -56,7 +59,7 @@ class PostService {
     const post = await PostDB.update(id, data);
 
     const baseUrl = process.env.BASE_URL;
-    post.image = post.image ? `${baseUrl}/post/image/${post.image}` : null;
+    post.image = post.image ? `${baseUrl}/post/images/${post.image}` : null;
 
     return post;
   }

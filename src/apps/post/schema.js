@@ -1,19 +1,19 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
 class PostSchema {
   static getAllSchema() {
     return Joi.object({
       query: Joi.object({
         page: Joi.number().integer().min(1).optional().default(1).messages({
-          'number.min': 'validation.page.min',
-          'number.base': 'validation.page.invalid'
+          "number.min": "validation.page.min",
+          "number.base": "validation.page.invalid",
         }),
         limit: Joi.number().integer().min(1).max(100).optional().default(10).messages({
-          'number.min': 'validation.limit.min',
-          'number.max': 'validation.limit.max',
-          'number.base': 'validation.limit.invalid'
-        })
-      })
+          "number.min": "validation.limit.min",
+          "number.max": "validation.limit.max",
+          "number.base": "validation.limit.invalid",
+        }),
+      }),
     }).options({ stripUnknown: true });
   }
 
@@ -21,31 +21,31 @@ class PostSchema {
     return Joi.object({
       body: Joi.object({
         title: Joi.string().min(1).max(255).required().messages({
-          'string.min': 'validation.title.min',
-          'string.max': 'validation.title.max',
-          'any.required': 'validation.title.required'
+          "string.min": "validation.title.min",
+          "string.max": "validation.title.max",
+          "any.required": "validation.title.required",
         }),
-        description: Joi.string().optional().allow('').messages({
-          'string.base': 'validation.description.invalid'
+        description: Joi.string().optional().allow("").messages({
+          "string.base": "validation.description.invalid",
         }),
         content: Joi.string().min(1).required().messages({
-          'string.min': 'validation.content.min',
-          'any.required': 'validation.content.required'
+          "string.min": "validation.content.min",
+          "any.required": "validation.content.required",
         }),
         category_id: Joi.number().integer().positive().optional().messages({
-          'number.positive': 'validation.category_id.positive',
-          'number.base': 'validation.category_id.invalid'
+          "number.positive": "validation.category_id.positive",
+          "number.base": "validation.category_id.invalid",
         }),
-        tags: Joi.string().optional().allow('').messages({
-          'string.base': 'validation.tags.invalid'
+        tags: Joi.string().optional().allow("").messages({
+          "string.base": "validation.tags.invalid",
         }),
         fio: Joi.string().min(1).max(255).required().messages({
-          'string.min': 'validation.fio.min',
-          'string.max': 'validation.fio.max',
-          'any.required': 'validation.fio.required'
+          "string.min": "validation.fio.min",
+          "string.max": "validation.fio.max",
+          "any.required": "validation.fio.required",
         }),
-        is_active: Joi.boolean().optional().default(true)
-      })
+        is_active: Joi.boolean().optional().default(true),
+      }),
     }).options({ stripUnknown: true });
   }
 
@@ -53,36 +53,38 @@ class PostSchema {
     return Joi.object({
       params: Joi.object({
         id: Joi.number().integer().positive().required().messages({
-          'any.required': 'validation.id.required',
-          'number.positive': 'validation.id.positive'
-        })
+          "any.required": "validation.id.required",
+          "number.positive": "validation.id.positive",
+        }),
       }),
       body: Joi.object({
         title: Joi.string().min(1).max(255).optional().messages({
-          'string.min': 'validation.title.min',
-          'string.max': 'validation.title.max'
+          "string.min": "validation.title.min",
+          "string.max": "validation.title.max",
         }),
-        description: Joi.string().optional().allow('').messages({
-          'string.base': 'validation.description.invalid'
+        description: Joi.string().optional().allow("").messages({
+          "string.base": "validation.description.invalid",
         }),
         content: Joi.string().min(1).optional().messages({
-          'string.min': 'validation.content.min'
+          "string.min": "validation.content.min",
         }),
         category_id: Joi.number().integer().positive().optional().messages({
-          'number.positive': 'validation.category_id.positive',
-          'number.base': 'validation.category_id.invalid'
+          "number.positive": "validation.category_id.positive",
+          "number.base": "validation.category_id.invalid",
         }),
-        tags: Joi.string().optional().allow('').messages({
-          'string.base': 'validation.tags.invalid'
+        tags: Joi.string().optional().allow("").messages({
+          "string.base": "validation.tags.invalid",
         }),
         fio: Joi.string().min(1).max(255).optional().messages({
-          'string.min': 'validation.fio.min',
-          'string.max': 'validation.fio.max'
+          "string.min": "validation.fio.min",
+          "string.max": "validation.fio.max",
         }),
-        is_active: Joi.boolean().optional()
-      }).min(1).messages({
-        'object.min': 'validation.update.min_fields'
+        is_active: Joi.boolean().optional(),
       })
+        .min(1)
+        .messages({
+          "object.min": "validation.update.min_fields",
+        }),
     }).options({ stripUnknown: true });
   }
 
@@ -90,10 +92,10 @@ class PostSchema {
     return Joi.object({
       params: Joi.object({
         id: Joi.number().integer().positive().required().messages({
-          'any.required': 'validation.id.required',
-          'number.positive': 'validation.id.positive'
-        })
-      })
+          "any.required": "validation.id.required",
+          "number.positive": "validation.id.positive",
+        }),
+      }),
     }).options({ stripUnknown: true });
   }
 
@@ -101,21 +103,19 @@ class PostSchema {
     return Joi.object({
       params: Joi.object({
         id: Joi.number().integer().positive().required().messages({
-          'any.required': 'validation.id.required',
-          'number.positive': 'validation.id.positive'
-        })
-      })
+          "any.required": "validation.id.required",
+          "number.positive": "validation.id.positive",
+        }),
+      }),
     }).options({ stripUnknown: true });
   }
 
-  static getImageSchema() {
+  static getFileSchema() {
     return Joi.object({
       params: Joi.object({
-        filename: Joi.string().pattern(/^[a-zA-Z0-9_-]+\.(jpg|jpeg|png|gif|webp)$/).required().messages({
-          'any.required': 'validation.filename.required',
-          'string.pattern.base': 'validation.filename.invalid'
-        })
-      })
+        filename: Joi.string().required(),
+        file: Joi.string().required(),
+      }),
     }).options({ stripUnknown: true });
   }
 }
