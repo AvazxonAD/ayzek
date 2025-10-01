@@ -1,7 +1,7 @@
 const { CategoryService } = require("./service");
 
 class CategoryController {
-  static async getAll(req, res) {
+  static async get(req, res) {
     const { page = 1, limit = 10 } = req.query;
     const result = await CategoryService.getAllCategories(parseInt(page), parseInt(limit));
     return res.success(result, req.t("category.get_all_success"));

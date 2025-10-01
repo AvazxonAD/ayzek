@@ -4,6 +4,7 @@ class PostSchema {
   static getAllSchema() {
     return Joi.object({
       query: Joi.object({
+        id: Joi.number().integer().min(1).allow(null, ""),
         page: Joi.number().integer().min(1).optional().default(1).messages({
           "number.min": "validation.page.min",
           "number.base": "validation.page.invalid",
@@ -36,9 +37,7 @@ class PostSchema {
           "number.positive": "validation.category_id.positive",
           "number.base": "validation.category_id.invalid",
         }),
-        tags: Joi.string().optional().allow("").messages({
-          "string.base": "validation.tags.invalid",
-        }),
+        tags: Joi.array().items(Joi.number()).default([]).allow(null),
         fio: Joi.string().min(1).max(255).required().messages({
           "string.min": "validation.fio.min",
           "string.max": "validation.fio.max",
@@ -72,9 +71,7 @@ class PostSchema {
           "number.positive": "validation.category_id.positive",
           "number.base": "validation.category_id.invalid",
         }),
-        tags: Joi.string().optional().allow("").messages({
-          "string.base": "validation.tags.invalid",
-        }),
+        tags: Joi.array().default([]).allow(null),
         fio: Joi.string().min(1).max(255).optional().messages({
           "string.min": "validation.fio.min",
           "string.max": "validation.fio.max",

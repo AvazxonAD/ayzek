@@ -9,7 +9,7 @@ class PostDB {
     return result[0];
   }
 
-  static async findAll(page = 1, limit = 10) {
+  static async get(page = 1, limit = 10, id) {
     const offset = (page - 1) * limit;
 
     const [result, countResult] = await Promise.all([
@@ -17,10 +17,24 @@ class PostDB {
         `
         SELECT
           p.*,
-          c.name as category_name
+          c.name as category_name,
+          COALESCE(
+              (
+                SELECT 
+                  JSON_AGG(JSON_BUILD_OBJECT(
+                    'id', tg.id,
+                    'tag_name', t.name
+                  ))
+                FROM post_tags tg
+                JOIN tags t ON t.id = tg.tag_id
+                WHERE tg.post_id = p.id
+                  AND tg.is_active = true
+                LIMIT 1
+            ), '[]'::JSON) AS tags
         FROM posts p
         LEFT JOIN categories c ON p.category_id = c.id
         WHERE p.is_active = true
+          ${id ? `AND p.id != ${id}` : ""}
         ORDER BY p.created_at DESC
         LIMIT $1 OFFSET $2
       `,
@@ -45,11 +59,24 @@ class PostDB {
     };
   }
 
-  static async findById(id) {
+  static async getById(id) {
     const result = await db.query(
       `
       SELECT p.*,
-             c.name as category_name
+            c.name as category_name,
+            COALESCE(
+              (
+                SELECT 
+                  JSON_AGG(JSON_BUILD_OBJECT(
+                    'id', tg.id,
+                    'tag_name', t.name
+                  ))
+                FROM post_tags tg
+                JOIN tags t ON t.id = tg.tag_id
+                WHERE tg.post_id = p.id
+                  AND tg.is_active = true
+                LIMIT 1
+            ), '[]'::JSON) AS tags
       FROM posts p
       LEFT JOIN categories c ON p.category_id = c.id
       WHERE p.id = $1
@@ -60,27 +87,38 @@ class PostDB {
     return result[0] || null;
   }
 
-  static async create(data) {
-    const { title, description, content, image, category_id, tags, fio, gif, video } = data;
-    const result = await db.query(
+  static async create(params, client) {
+    const result = await client.query(
       `
       INSERT INTO posts (title, description, content, image, category_id, tags, fio, gif, video, created_at, updated_at) 
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW(), NOW()) 
       RETURNING *
     `,
-      [
-        title,
-        description,
-        content,
-        image ? image[0].filename : null,
-        category_id,
-        tags,
-        fio,
-        gif ? gif[0].filename : null,
-        video ? video[0].filename : null,
-      ]
+      params
     );
-    return result[0];
+
+    return result.rows[0];
+  }
+
+  static async createTags(params, client) {
+    const result = await client.query(
+      `
+      INSERT INTO post_tags (post_id, tag_id) 
+      VALUES ($1, $2) 
+      RETURNING *
+    `,
+      params
+    );
+
+    return result.rows[0];
+  }
+
+  static async deleteTags(params, client) {
+    await client.query(`UPDATE post_tags SET is_active = false WHERE post_id = $1`, params);
+  }
+
+  static async deleteTagsById(params, client) {
+    await client.query(`UPDATE post_tags SET is_active = false WHERE id = $1`, params);
   }
 
   static async update(id, data) {
@@ -138,8 +176,29 @@ class PostDB {
       RETURNING id, title, description, content, image, category_id, tags, fio, is_active, created_at, updated_at
     `;
 
-    const result = await db.query(query, values);
-    return result[0] || null;
+    const result = await db.transaction(async (client) => {
+      const result = await client.query(query, values);
+
+      const tags = await client.query(`SELECT * FROM post_tags WHERE post_id = $1 AND is_active = true`, [id]);
+
+      for (let tag of data.tags) {
+        const check = await tags.rows.find((item) => item.tag_id === tag);
+        if (!check) {
+          await this.createTags([id, tag], client);
+        }
+      }
+
+      for (let tag of tags.rows) {
+        const check = data.tags.find((item) => item === tag.tag_id);
+        if (!check) {
+          await this.deleteTagsById([tag.id], client);
+        }
+      }
+
+      return result.rows[0];
+    });
+
+    return result;
   }
 
   static async delete(id) {

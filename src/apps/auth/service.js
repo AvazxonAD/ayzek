@@ -94,7 +94,7 @@ class AuthService {
       });
 
       // Generate QR code URL
-      const baseUrl = process.env.BASE_URL || "http://localhost:3000";
+      const baseUrl = process.env.BASE_URL || "http://localhost:4001";
       const fileUrl = `${baseUrl}/credit/${filename}`;
 
       // Generate QR code
@@ -106,9 +106,8 @@ class AuthService {
         filepath,
         fileUrl,
         qrCode: qrCodeDataURL,
-        message: "PDF certificate generated and QR code created successfully"
+        message: "PDF certificate generated and QR code created successfully",
       };
-
     } catch (error) {
       throw new ErrorResponse("Failed to generate QR code and PDF", 500);
     }

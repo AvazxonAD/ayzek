@@ -3,12 +3,12 @@ const ErrorResponse = require("../../middleware/errorResponse");
 
 class CategoryService {
   static async getAllCategories(page = 1, limit = 10) {
-    const result = await CategoryDB.findAll(page, limit);
+    const result = await CategoryDB.get(page, limit);
     return result;
   }
 
   static async getCategoryById(id) {
-    const category = await CategoryDB.findById(id);
+    const category = await CategoryDB.getById(id);
     if (!category) {
       throw new ErrorResponse("category.not_found", 404);
     }
@@ -21,7 +21,7 @@ class CategoryService {
   }
 
   static async updateCategory(id, data) {
-    const existingCategory = await CategoryDB.findById(id);
+    const existingCategory = await CategoryDB.getById(id);
     if (!existingCategory) {
       throw new ErrorResponse("category.not_found", 404);
     }
@@ -31,7 +31,7 @@ class CategoryService {
   }
 
   static async deleteCategory(id) {
-    const existingCategory = await CategoryDB.findById(id);
+    const existingCategory = await CategoryDB.getById(id);
     if (!existingCategory) {
       throw new ErrorResponse("category.not_found", 404);
     }

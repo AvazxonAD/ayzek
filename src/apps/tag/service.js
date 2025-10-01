@@ -3,12 +3,12 @@ const ErrorResponse = require("../../middleware/errorResponse");
 
 class TagService {
   static async getAllTags(page = 1, limit = 10) {
-    const result = await TagDB.findAll(page, limit);
+    const result = await TagDB.get(page, limit);
     return result;
   }
 
-  static async getTagById(id) {
-    const tag = await TagDB.findById(id);
+  static async getById(id) {
+    const tag = await TagDB.getById(id);
     if (!tag) {
       throw new ErrorResponse("tag.not_found", 404);
     }
@@ -21,7 +21,7 @@ class TagService {
   }
 
   static async updateTag(id, data) {
-    const existingTag = await TagDB.findById(id);
+    const existingTag = await TagDB.getById(id);
     if (!existingTag) {
       throw new ErrorResponse("tag.not_found", 404);
     }
@@ -31,7 +31,7 @@ class TagService {
   }
 
   static async deleteTag(id) {
-    const existingTag = await TagDB.findById(id);
+    const existingTag = await TagDB.getById(id);
     if (!existingTag) {
       throw new ErrorResponse("tag.not_found", 404);
     }

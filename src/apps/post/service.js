@@ -1,28 +1,35 @@
 const { PostDB } = require("./db");
 const { CategoryService } = require("../category/service");
 const ErrorResponse = require("../../middleware/errorResponse");
+const { db } = require("../../config/db");
+const { TagService } = require("../tag/service");
 
 class PostService {
-  static async getAllPosts(page = 1, limit = 10) {
-    const result = await PostDB.findAll(page, limit);
+  static async get(page = 1, limit = 10, id) {
+    const result = await PostDB.get(page, limit, id);
 
     const baseUrl = process.env.BASE_URL;
     result.data = result.data.map((post) => ({
       ...post,
       image: post.image ? `${baseUrl}/post/images/${post.image}` : null,
+      video: post.video ? `${baseUrl}/post/videos/${post.video}` : null,
+      gif: post.gif ? `${baseUrl}/post/gifs/${post.gif}` : null,
     }));
 
     return result;
   }
 
-  static async getPostById(id) {
-    const post = await PostDB.findById(id);
+  static async getById(id) {
+    const post = await PostDB.getById(id);
     if (!post) {
       throw new ErrorResponse("post.not_found", 404);
     }
 
+    console.log(post.gif);
     const baseUrl = process.env.BASE_URL;
     post.image = post.image ? `${baseUrl}/post/images/${post.image}` : null;
+    post.video = post.video ? `${baseUrl}/post/videos/${post.video}` : null;
+    post.gif = post.gif ? `${baseUrl}/post/gifs/${post.gif}` : null;
 
     const { see } = await PostDB.updateSeeCount([post.id]);
     post.see = see;
@@ -35,7 +42,32 @@ class PostService {
       await CategoryService.getCategoryById(data.category_id);
     }
 
-    const post = await PostDB.create(data);
+    const post = await db.transaction(async (client) => {
+      const result = await PostDB.create(
+        [
+          data.title,
+          data.description,
+          data.content,
+          data.image ? data.image[0].filename : null,
+          data.category_id,
+          data.tags,
+          data.fio,
+          data.gif ? data.gif[0].filename : null,
+          data.video ? data.video[0].filename : null,
+        ],
+        client
+      );
+
+      if (data.tags.length) {
+        for (let tag of data.tags) {
+          await TagService.getById(tag);
+
+          await PostDB.createTags([result.id, tag], client);
+        }
+      }
+
+      return result;
+    });
 
     const baseUrl = process.env.BASE_URL;
 
@@ -47,7 +79,7 @@ class PostService {
   }
 
   static async updatePost(id, data) {
-    const existingPost = await PostDB.findById(id);
+    const existingPost = await PostDB.getById(id);
     if (!existingPost) {
       throw new ErrorResponse("post.not_found", 404);
     }
@@ -60,12 +92,14 @@ class PostService {
 
     const baseUrl = process.env.BASE_URL;
     post.image = post.image ? `${baseUrl}/post/images/${post.image}` : null;
+    post.video = post.video ? `${baseUrl}/post/videos/${post.video}` : null;
+    post.gif = post.gif ? `${baseUrl}/post/gifs/${post.gif}` : null;
 
     return post;
   }
 
   static async deletePost(id) {
-    const existingPost = await PostDB.findById(id);
+    const existingPost = await PostDB.getById(id);
     if (!existingPost) {
       throw new ErrorResponse("post.not_found", 404);
     }

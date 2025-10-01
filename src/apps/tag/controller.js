@@ -1,7 +1,7 @@
 const { TagService } = require("./service");
 
 class TagController {
-  static async getAll(req, res) {
+  static async get(req, res) {
     const { page = 1, limit = 10 } = req.query;
     const result = await TagService.getAllTags(parseInt(page), parseInt(limit));
     return res.success(result, req.t("tag.get_all_success"));
@@ -9,7 +9,7 @@ class TagController {
 
   static async getById(req, res) {
     const { id } = req.params;
-    const result = await TagService.getTagById(id);
+    const result = await TagService.getById(id);
     return res.success(result, req.t("tag.get_success"));
   }
 

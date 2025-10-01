@@ -4,15 +4,15 @@ const fs = require("fs");
 const mime = require("mime-types");
 
 class PostController {
-  static async getAll(req, res) {
-    const { page = 1, limit = 10 } = req.query;
-    const result = await PostService.getAllPosts(parseInt(page), parseInt(limit));
+  static async get(req, res) {
+    const { page = 1, limit = 10, id } = req.query;
+    const result = await PostService.get(parseInt(page), parseInt(limit), id);
     return res.success(result, req.t("post.get_all_success"));
   }
 
   static async getById(req, res) {
     const { id } = req.params;
-    const result = await PostService.getPostById(id);
+    const result = await PostService.getById(id);
     return res.success(result, req.t("post.get_success"));
   }
 

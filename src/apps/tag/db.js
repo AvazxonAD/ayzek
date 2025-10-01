@@ -1,17 +1,20 @@
 const { db } = require("../../config/db/index");
 
 class TagDB {
-  static async findAll(page = 1, limit = 10) {
+  static async get(page = 1, limit = 10) {
     const offset = (page - 1) * limit;
-    
+
     const [result, countResult] = await Promise.all([
-      db.query(`
+      db.query(
+        `
         SELECT id, name, is_active, created_at, updated_at 
         FROM tags 
         ORDER BY created_at DESC
         LIMIT $1 OFFSET $2
-      `, [limit, offset]),
-      db.query(`SELECT COUNT(*) as total FROM tags`)
+      `,
+        [limit, offset]
+      ),
+      db.query(`SELECT COUNT(*) as total FROM tags`),
     ]);
 
     const total = parseInt(countResult[0].total);
@@ -25,27 +28,33 @@ class TagDB {
         total,
         totalPages,
         hasNext: page < totalPages,
-        hasPrev: page > 1
-      }
+        hasPrev: page > 1,
+      },
     };
   }
 
-  static async findById(id) {
-    const result = await db.query(`
+  static async getById(id) {
+    const result = await db.query(
+      `
       SELECT id, name, is_active, created_at, updated_at 
       FROM tags 
       WHERE id = $1
-    `, [id]);
+    `,
+      [id]
+    );
     return result[0] || null;
   }
 
   static async create(data) {
     const { name, is_active = true } = data;
-    const result = await db.query(`
+    const result = await db.query(
+      `
       INSERT INTO tags (name, is_active, created_at, updated_at) 
       VALUES ($1, $2, NOW(), NOW()) 
       RETURNING id, name, is_active, created_at, updated_at
-    `, [name, is_active]);
+    `,
+      [name, is_active]
+    );
     return result[0];
   }
 
@@ -69,7 +78,7 @@ class TagDB {
 
     const query = `
       UPDATE tags 
-      SET ${fields.join(', ')} 
+      SET ${fields.join(", ")} 
       WHERE id = $${paramIndex} 
       RETURNING id, name, is_active, created_at, updated_at
     `;
@@ -79,11 +88,14 @@ class TagDB {
   }
 
   static async delete(id) {
-    const result = await db.query(`
+    const result = await db.query(
+      `
       DELETE FROM tags 
       WHERE id = $1 
       RETURNING id
-    `, [id]);
+    `,
+      [id]
+    );
     return result[0] || null;
   }
 }

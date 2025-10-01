@@ -6,7 +6,7 @@ const { multiUpload } = require("../../middleware/multiUpload");
 
 const router = express.Router();
 
-router.get("/", validator(PostController.getAll, PostSchema.getAllSchema()));
+router.get("/", validator(PostController.get, PostSchema.getAllSchema()));
 router.get("/:id", validator(PostController.getById, PostSchema.getByIdSchema()));
 router.get("/:file/:filename", validator(PostController.getFile, PostSchema.getFileSchema()));
 router.post("/", multiUpload, validator(PostController.create, PostSchema.createSchema()));

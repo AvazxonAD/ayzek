@@ -1,15 +1,15 @@
 const { UserPanelService } = require("./service");
 
 class UserPanelController {
-  static async getAllPosts(req, res) {
+  static async get(req, res) {
     const { page = 1, limit = 10 } = req.query;
-    const result = await UserPanelService.getAllPosts(parseInt(page), parseInt(limit));
+    const result = await UserPanelService.get(parseInt(page), parseInt(limit));
     return res.success(result, req.t("userPanel.get_all_success"));
   }
 
-  static async getPostById(req, res) {
+  static async getById(req, res) {
     const { id } = req.params;
-    const result = await UserPanelService.getPostById(id);
+    const result = await UserPanelService.getById(id);
     return res.success(result, req.t("userPanel.get_success"));
   }
 }

@@ -2,18 +2,20 @@ const { PostDB } = require("../post/db");
 const ErrorResponse = require("../../middleware/errorResponse");
 
 class UserPanelService {
-  static async getAllPosts(page = 1, limit = 10) {
+  static async get(page = 1, limit = 10) {
     // Only get active posts for user panel
-    const result = await PostDB.findAll(page, limit);
-    
+    const result = await PostDB.get(page, limit);
+
     // Filter only active posts
-    result.data = result.data.filter(post => post.is_active === true);
-    
+    result.data = result.data.filter((post) => post.is_active === true);
+
     // Add baseUrl to image paths using API endpoint
     const baseUrl = process.env.BASE_URL;
     result.data = result.data.map((post) => ({
       ...post,
-      image: post.image ? `${baseUrl}/post/image/${post.image}` : null,
+      image: post.image ? `${baseUrl}/post/images/${post.image}` : null,
+      video: post.video ? `${baseUrl}/post/videos/${post.video}` : null,
+      gif: post.gif ? `${baseUrl}/post/gifs/${post.gif}` : null,
     }));
 
     // Recalculate pagination for filtered data
@@ -28,13 +30,13 @@ class UserPanelService {
         total,
         totalPages,
         hasNext: page < totalPages,
-        hasPrev: page > 1
-      }
+        hasPrev: page > 1,
+      },
     };
   }
 
-  static async getPostById(id) {
-    const post = await PostDB.findById(id);
+  static async getById(id) {
+    const post = await PostDB.getById(id);
     if (!post) {
       throw new ErrorResponse("post.not_found", 404);
     }
@@ -46,7 +48,9 @@ class UserPanelService {
 
     // Add baseUrl to image path using API endpoint
     const baseUrl = process.env.BASE_URL;
-    post.image = post.image ? `${baseUrl}/post/image/${post.image}` : null;
+    post.image = post.image ? `${baseUrl}/post/images/${post.image}` : null;
+    post.video = post.video ? `${baseUrl}/post/videos/${post.video}` : null;
+    post.gif = post.gif ? `${baseUrl}/post/gifs/${post.gif}` : null;
 
     return post;
   }

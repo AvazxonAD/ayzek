@@ -5,7 +5,7 @@ const { validator } = require("../../middleware/validator");
 
 const router = express.Router();
 
-router.get("/", validator(CategoryController.getAll, CategorySchema.getAllSchema()));
+router.get("/", validator(CategoryController.get, CategorySchema.getAllSchema()));
 router.get("/:id", validator(CategoryController.getById, CategorySchema.getByIdSchema()));
 router.post("/", validator(CategoryController.create, CategorySchema.createSchema()));
 router.put("/:id", validator(CategoryController.update, CategorySchema.updateSchema()));
