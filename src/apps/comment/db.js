@@ -26,7 +26,14 @@ exports.CommentDB = class {
   }
 
   static async get(params) {
-    const query = `SELECT * FROM comments WHERE is_active = true`;
+    const query = `
+      SELECT
+        c.*,
+        a.email
+      FROM comments c 
+      LEFT JOIN accounts a ON a.id = c.account_id  
+      WHERE c.is_active = true 
+        AND c.post_id = $1`;
 
     const result = await db.query(query, params);
 

@@ -1,4 +1,5 @@
 const express = require("express");
+
 const AuthRoutes = require("./auth");
 const categoryRoutes = require("./category");
 const tagRoutes = require("./tag");

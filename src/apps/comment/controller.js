@@ -4,7 +4,7 @@ exports.Controller = class {
   static now = new Date();
 
   static async create(req, res) {
-    const result = await CommentService.create({ ...req.body });
+    const result = await CommentService.create({ ...req.body, account_id: req.user.id });
 
     return res.success(result, req.t("system.create_success"));
   }
@@ -22,7 +22,7 @@ exports.Controller = class {
   }
 
   static async get(req, res) {
-    const result = await CommentService.get();
+    const result = await CommentService.get(req.query);
 
     return res.success(result, req.t("system.get_success"));
   }

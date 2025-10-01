@@ -35,7 +35,11 @@ exports.Schema = class {
   }
 
   static get() {
-    Joi.object({});
+    return Joi.object({
+      query: Joi.object({
+        post_id: Joi.number().min(1).integer().required(),
+      }),
+    });
   }
 
   static delete() {

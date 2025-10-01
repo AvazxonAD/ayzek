@@ -37,7 +37,7 @@ exports.CommentService = class {
   }
 
   static async get(data) {
-    const result = await CommentDB.get([]);
+    const result = await CommentDB.get([data.post_id]);
 
     return result;
   }
