@@ -1,5 +1,5 @@
 const { PostDB } = require("../post/db");
-const ErrorResponse = require("../../middleware/errorResponse");
+const { ErrorResponse } = require("../../middleware/errorResponse");
 
 class UserPanelService {
   static async get(page = 1, limit = 10) {

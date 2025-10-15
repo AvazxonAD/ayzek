@@ -1,5 +1,5 @@
 const { CommentDB } = require("./db");
-const ErrorResponse = require("../../middleware/errorResponse");
+const { ErrorResponse } = require("../../middleware/errorResponse");
 
 exports.CommentService = class {
   static now = new Date();

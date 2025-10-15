@@ -1,5 +1,5 @@
 const { StorageDB } = require("./db");
-const ErrorResponse = require("../../middleware/errorResponse");
+const { ErrorResponse } = require("../../middleware/errorResponse");
 const fs = require("fs/promises");
 const path = require("path");
 const mime = require("mime-types");

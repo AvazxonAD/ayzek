@@ -1,5 +1,5 @@
 const { TagDB } = require("./db");
-const ErrorResponse = require("../../middleware/errorResponse");
+const { ErrorResponse } = require("../../middleware/errorResponse");
 
 class TagService {
   static async getAllTags(page = 1, limit = 10) {

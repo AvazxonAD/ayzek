@@ -8,11 +8,13 @@ const userPanelRoutes = require("./userPanel");
 const StorageRoutes = require("./storage");
 const AccountRoutes = require("./account/index");
 const CommentRoutes = require("./comment/index");
+const GifRoutes = require("./gif/");
 
 const router = express.Router();
 
 // Auth routes
 router.use("/auth", AuthRoutes);
+router.use("/gif", GifRoutes);
 router.use("/category", categoryRoutes);
 router.use("/teg", tagRoutes);
 router.use("/post", postRoutes);

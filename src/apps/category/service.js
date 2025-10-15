@@ -1,5 +1,5 @@
 const { CategoryDB } = require("./db");
-const ErrorResponse = require("../../middleware/errorResponse");
+const { ErrorResponse } = require("../../middleware/errorResponse");
 
 class CategoryService {
   static async getAllCategories(page = 1, limit = 10) {

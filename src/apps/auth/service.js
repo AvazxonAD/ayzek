@@ -5,7 +5,7 @@ const path = require("path");
 const PDFDocument = require("pdfkit");
 const QRCode = require("qrcode");
 const { UserDB } = require("./db");
-const ErrorResponse = require("../../middleware/errorResponse");
+const { ErrorResponse } = require("../../middleware/errorResponse");
 
 class AuthService {
   static async verifyPassword(plainPassword, hashedPassword) {

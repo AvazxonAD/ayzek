@@ -1,6 +1,6 @@
 const { PostDB } = require("./db");
 const { CategoryService } = require("../category/service");
-const ErrorResponse = require("../../middleware/errorResponse");
+const { ErrorResponse } = require("../../middleware/errorResponse");
 const { db } = require("../../config/db");
 const { TagService } = require("../tag/service");
 

@@ -1,7 +1,7 @@
 const { AccountDB } = require("./db");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const ErrorResponse = require("../../middleware/errorResponse");
+const { ErrorResponse } = require("../../middleware/errorResponse");
 
 exports.AccountService = class {
   static async register(data) {
