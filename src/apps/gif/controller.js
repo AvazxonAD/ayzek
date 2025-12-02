@@ -2,6 +2,12 @@
 const { GifService } = require("./service");
 
 exports.Controller = class {
+  static async updateStatus(req, res) {
+    const result = await GifService.updateStatus({ ...req.params, ...req.body });
+
+    return res.success(result, req.t("system.update_success"), 200);
+  }
+
   static async get(req, res) {
     const { data, meta } = await GifService.get(req.query);
     return res.success(data, req.t("system.get_success"), 200, meta);

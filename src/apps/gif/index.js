@@ -10,6 +10,7 @@ const router = express.Router();
 router.get("/", validator(Controller.get, Schema.get()));
 router.get("/:id", validator(Controller.getById, Schema.getById()));
 router.post("/", uploadGif.single("file"), validator(Controller.create));
+router.put("/status/:id", validator(Controller.updateStatus, Schema.updateStatus()));
 router.put("/:id", uploadGif.single("file"), validator(Controller.update));
 router.delete("/:id", validator(Controller.delete, Schema.delete()));
 

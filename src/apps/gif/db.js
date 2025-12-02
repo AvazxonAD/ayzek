@@ -2,6 +2,12 @@
 const { db } = require("../../config/db/index");
 
 exports.GifDB = class {
+  static async updateStatus(params) {
+    const query = `UPDATE gifs SET active = $1 WHERE id = $2 RETURNING * `;
+    const result = await db.query(query, params);
+    return result[0];
+  }
+
   static async get(params, filter) {
     const conditions = ["g.isdeleted = false"];
     const values = [...params];
@@ -11,13 +17,15 @@ exports.GifDB = class {
       conditions.push(`g.file ILIKE $${values.length}`);
     }
 
+    if (filter.active !== undefined) {
+      values.push(filter.active);
+      conditions.push(`g.active = $${values.length}`);
+    }
+
     const query = `--sql
       WITH data AS (
         SELECT
-          g.id,
-          g.file,
-          g.created_at,
-          g.updated_at
+          g.*
         FROM gifs g
         WHERE ${conditions.join(" AND ")}
         ORDER BY g.id DESC
@@ -36,10 +44,7 @@ exports.GifDB = class {
   static async getById(params) {
     const query = `--sql
       SELECT
-        g.id,
-        g.file,
-        g.created_at,
-        g.updated_at
+        g.*
       FROM gifs g
       WHERE g.id = $1 AND g.isdeleted = false
     `;

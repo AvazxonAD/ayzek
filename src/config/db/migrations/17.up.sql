@@ -1,0 +1,13 @@
+DROP TABLE ads; 
+
+CREATE TABLE ads (
+    id SERIAL NOT NULL PRIMARY KEY,
+    title VARCHAR(1000), 
+    description TEXT,
+    type VARCHAR,
+    status BOOLEAN DEFAULT FALSE,
+    file TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_active BOOLEAN DEFAULT TRUE
+);

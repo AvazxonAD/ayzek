@@ -2,12 +2,23 @@
 const Joi = require("joi");
 
 exports.Schema = class {
+  static updateStatus() {
+    return Joi.object({
+      body: Joi.object({
+        status: Joi.boolean().required(),
+      }),
+      params: Joi.object({
+        id: Joi.number().positive().integer().required(),
+      }),
+    }).options({ stripUnknown: true });
+  }
   static get() {
     return Joi.object({
       query: Joi.object({
         search: Joi.string().trim().allow(null, ""),
         page: Joi.number().integer().positive().default(1),
         limit: Joi.number().integer().positive().default(20),
+        active: Joi.boolean().allow(null),
       }),
     }).options({ stripUnknown: true });
   }

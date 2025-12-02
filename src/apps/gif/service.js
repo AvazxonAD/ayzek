@@ -7,6 +7,15 @@ const fs = require("node:fs/promises");
 const mime = require("mime-types");
 
 exports.GifService = class {
+  static async updateStatus(data) {
+    const check = await GifDB.getById([data.id]);
+
+    if (!check) throw new ErrorResponse("gif.not_found", 404);
+
+    const result = await GifDB.updateStatus([data.status, data.id]);
+    return result;
+  }
+
   static async get(data) {
     const offset = (data.page - 1) * data.limit;
     const result = await GifDB.get([offset, data.limit], data);

@@ -26,7 +26,7 @@ exports.CommentDB = class {
   }
 
   static async get(params) {
-    const query = `
+    const query = `--sql
       SELECT
         c.*,
         a.email

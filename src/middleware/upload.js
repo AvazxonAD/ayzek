@@ -80,3 +80,18 @@ exports.uploadVideo = multer({
     checkVideoFileType(file, cb);
   },
 });
+
+//
+// === ALL FILE ===
+//
+const storage = multer.diskStorage({
+  destination: "./public/uploads/",
+  filename: function (req, file, cb) {
+    cb(null, "file-" + Date.now() + path.extname(file.originalname));
+  },
+});
+
+exports.upload = multer({
+  storage,
+  limits: { fileSize: 100 * 1024 * 1024 }, // 500MB
+});
