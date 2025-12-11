@@ -2,7 +2,7 @@ const { db } = require("../../config/db/index");
 
 exports.AdsDB = class {
   static async create(params) {
-    const query = `INSERT INTO ads(title, description, file, type, status, created_at, updated_at) VALUES($1, $2, $3, $4, $5, now(), now()) RETURNING *`;
+    const query = `INSERT INTO ads(title, description, file, type, status, cta_link, cta_text, created_at, updated_at) VALUES($1, $2, $3, $4, $5, $6, $7, now(), now()) RETURNING *`;
 
     const result = await db.query(query, params);
 
@@ -10,7 +10,7 @@ exports.AdsDB = class {
   }
 
   static async update(params) {
-    const query = `UPDATE ads SET title = $1, description = $2, file = $3, type = $4, status = $5, updated_at = now() WHERE id = $6 RETURNING *`;
+    const query = `UPDATE ads SET title = $1, description = $2, file = $3, type = $4, status = $5, cta_link = $6, cta_text = $7, updated_at = now() WHERE id = $8 RETURNING *`;
 
     const result = await db.query(query, params);
 

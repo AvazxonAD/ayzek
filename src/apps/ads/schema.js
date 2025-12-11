@@ -8,6 +8,8 @@ exports.Schema = class {
       body: Joi.object({
         title: Joi.string().trim().max(255).required(),
         description: Joi.string().trim().allow(null, ""),
+        cta_link: Joi.string().trim().allow(null, ""),
+        cta_text: Joi.string().trim().allow(null, ""),
         file: Joi.string().trim().allow(null, ""),
         type: Joi.string().trim().max(100).allow(null, ""),
         status: Joi.boolean().default(false),
@@ -20,6 +22,8 @@ exports.Schema = class {
       body: Joi.object({
         title: Joi.string().trim().max(255).required(),
         description: Joi.string().trim().allow(null, ""),
+        cta_link: Joi.string().trim().allow(null, ""),
+        cta_text: Joi.string().trim().allow(null, ""),
         file: Joi.string().trim().allow(null, ""),
         type: Joi.string().trim().max(100).allow(null, ""),
         status: Joi.boolean().default(false),

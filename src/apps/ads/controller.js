@@ -35,9 +35,7 @@ exports.Controller = class {
 
   static async getFile(req, res) {
     const { file, content_type } = await AdsService.getFile(req.params);
-
     res.setHeader("Content-type", content_type);
-
     return res.send(file);
   }
 };

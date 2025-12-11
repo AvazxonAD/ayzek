@@ -25,7 +25,6 @@ class PostService {
       throw new ErrorResponse("post.not_found", 404);
     }
 
-    console.log(post.gif);
     const baseUrl = process.env.BASE_URL;
     post.image = post.image ? `${baseUrl}/post/images/${post.image}` : null;
     post.video = post.video ? `${baseUrl}/post/videos/${post.video}` : null;

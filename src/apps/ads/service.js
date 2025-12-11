@@ -23,8 +23,8 @@ exports.AdsService = class {
   }
 
   static async create(data) {
-    const result = await AdsDB.create([data.title, data.description, data.file.filename, data.type, data.status]);
-
+    if (!data.file) throw new ErrorResponse("file_not_found", 400);
+    const result = await AdsDB.create([data.title, data.description, data.file.filename, data.type, data.status, data.cta_link, data.cta_text]);
     return result;
   }
 
@@ -38,7 +38,7 @@ exports.AdsService = class {
       file = old_data.file;
     }
 
-    const result = await AdsDB.update([data.title, data.description, file, data.type, data.status, data.id]);
+    const result = await AdsDB.update([data.title, data.description, file, data.type, data.status, data.cta_link, data.cta_text, data.id]);
 
     return result;
   }

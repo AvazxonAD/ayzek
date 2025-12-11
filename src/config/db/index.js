@@ -71,7 +71,7 @@ class Db {
   static async connectDB() {
     const db = Db.getInstance();
     const dbPool = db.getPool();
-    console.log("Connect db".blue);
+    console.info("Connect db".blue);
     await db.query(`--sql
             CREATE TABLE IF NOT EXISTS "migrations"
             (
