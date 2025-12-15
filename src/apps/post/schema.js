@@ -9,7 +9,7 @@ class PostSchema {
           "number.min": "validation.page.min",
           "number.base": "validation.page.invalid",
         }),
-        limit: Joi.number().integer().min(1).max(100).optional().default(10).messages({
+        limit: Joi.number().integer().min(1).optional().default(10).messages({
           "number.min": "validation.limit.min",
           "number.max": "validation.limit.max",
           "number.base": "validation.limit.invalid",
