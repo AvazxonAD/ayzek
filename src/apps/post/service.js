@@ -87,6 +87,10 @@ class PostService {
       await CategoryService.getCategoryById(data.category_id);
     }
 
+    data.image = data.image ? data.image[0].filename : null;
+    data.gif = data.gif ? data.gif[0].filename : null;
+    data.video = data.video ? data.video[0].filename : null;
+
     const post = await PostDB.update(id, data);
 
     const baseUrl = process.env.BASE_URL;

@@ -146,6 +146,16 @@ class PostDB {
       values.push(data.image);
     }
 
+    if (data.gif !== undefined) {
+      fields.push(`gif = $${paramIndex++}`);
+      values.push(data.gif);
+    }
+
+    if (data.video !== undefined) {
+      fields.push(`video = $${paramIndex++}`);
+      values.push(data.video);
+    }
+
     if (data.category_id !== undefined) {
       fields.push(`category_id = $${paramIndex++}`);
       values.push(data.category_id);
