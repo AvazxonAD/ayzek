@@ -21,8 +21,8 @@ app.use(i18n.init);
 app.use(responseHandler);
 
 app.use((req, res, next) => {
-  if (req.url.startsWith("/ayzek-back")) {
-    req.url = req.url.replace("/ayzek-back", "");
+  if (req.url.startsWith("/ayzek-back/api")) {
+    req.url = req.url.replace("/ayzek-back/api", "");
   }
   next();
 });
