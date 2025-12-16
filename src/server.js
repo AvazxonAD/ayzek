@@ -20,6 +20,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(i18n.init);
 app.use(responseHandler);
 
+app.use((req, res, next) => {
+  if (req.url.startsWith("/ayzek-back")) {
+    req.url = req.url.replace("/ayzek-back", "");
+  }
+  next();
+});
+
 // API Routes
 app.use("/", routes);
 
