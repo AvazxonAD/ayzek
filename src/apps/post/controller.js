@@ -25,12 +25,7 @@ class PostController {
 
   static async update(req, res) {
     const { id } = req.params;
-    const postData = { ...req.body };
-
-    // Add image filename if uploaded
-    if (req.file) {
-      postData.image = req.file.filename;
-    }
+    const postData = { ...req.body, ...req.files };
 
     const result = await PostService.updatePost(id, postData);
     return res.success(result, req.t("post.update_success"));
