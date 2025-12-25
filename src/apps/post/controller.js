@@ -5,8 +5,8 @@ const mime = require("mime-types");
 const { VIDEO_TYPE } = require("../constants/data/data");
 class PostController {
   static async get(req, res) {
-    const { page = 1, limit = 10, id } = req.query;
-    const result = await PostService.get(parseInt(page), parseInt(limit), id);
+    const { page = 1, limit = 10, id, video } = req.query;
+    const result = await PostService.get(parseInt(page), parseInt(limit), id, video);
     return res.success(result, req.t("post.get_all_success"));
   }
 

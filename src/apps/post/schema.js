@@ -14,6 +14,7 @@ class PostSchema {
           "number.max": "validation.limit.max",
           "number.base": "validation.limit.invalid",
         }),
+        video: Joi.boolean().optional().default(false),
       }),
     }).options({ stripUnknown: true });
   }

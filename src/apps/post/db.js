@@ -9,8 +9,15 @@ class PostDB {
     return result[0];
   }
 
-  static async get(page = 1, limit = 10, id) {
+  static async get(page = 1, limit = 10, id, video) {
     const offset = (page - 1) * limit;
+    const conditions = []
+
+    if (video) {
+      conditions.push(`p.video IS NOT NULL`)
+    }
+
+    const where = conditions.length > 0 ? `AND ${conditions.join(" AND ")}` : ""
 
     const [result, countResult] = await Promise.all([
       db.query(
@@ -35,12 +42,19 @@ class PostDB {
         LEFT JOIN categories c ON p.category_id = c.id
         WHERE p.is_active = true
           ${id ? `AND p.id != ${id}` : ""}
+          ${where}
         ORDER BY p.created_at DESC
         LIMIT $1 OFFSET $2
       `,
         [limit, offset]
       ),
-      db.query(`SELECT COUNT(*) as total FROM posts WHERE is_active = true`),
+      db.query(`
+        SELECT
+          COALESCE(COUNT(p.id), 0) as total
+        FROM posts p
+        WHERE p.is_active = true
+          ${where}
+      `),
     ]);
 
     const total = parseInt(countResult[0].total);
