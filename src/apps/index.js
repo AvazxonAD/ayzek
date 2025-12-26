@@ -20,7 +20,7 @@ router.use("/gif", GifRoutes);
 router.use("/category", categoryRoutes);
 router.use("/teg", tagRoutes);
 router.use("/post", postRoutes);
-router.use("/public", userPanelRoutes);
+router.use("/public", postRoutes);
 router.use("/storage", StorageRoutes);
 router.use("/account", AccountRoutes);
 router.use("/comment", CommentRoutes);
