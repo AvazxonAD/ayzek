@@ -9,15 +9,15 @@ class PostDB {
     return result[0];
   }
 
-  static async get(page = 1, limit = 10, id, video) {
+  static async get(page = 1, limit = 10, id, video, order_by, order_type) {
     const offset = (page - 1) * limit;
-    const conditions = []
+    const conditions = [];
 
     if (video) {
-      conditions.push(`p.video IS NOT NULL`)
+      conditions.push(`p.video IS NOT NULL`);
     }
 
-    const where = conditions.length > 0 ? `AND ${conditions.join(" AND ")}` : ""
+    const where = conditions.length > 0 ? `AND ${conditions.join(" AND ")}` : "";
 
     const [result, countResult] = await Promise.all([
       db.query(
@@ -43,7 +43,7 @@ class PostDB {
         WHERE p.is_active = true
           ${id ? `AND p.id != ${id}` : ""}
           ${where}
-        ORDER BY p.created_at DESC
+        ORDER BY p.${order_by} ${order_type}
         LIMIT $1 OFFSET $2
       `,
         [limit, offset]

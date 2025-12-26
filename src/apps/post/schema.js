@@ -15,6 +15,8 @@ class PostSchema {
           "number.base": "validation.limit.invalid",
         }),
         video: Joi.boolean().optional().default(false),
+        order_by: Joi.string().valid("see", "created_at").allow(""),
+        order_type: Joi.string().trim().valid("ASC", "DESC").allow(""),
       }),
     }).options({ stripUnknown: true });
   }
