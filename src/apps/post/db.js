@@ -9,7 +9,7 @@ class PostDB {
     return result[0];
   }
 
-  static async get(page = 1, limit = 10, id, video, order_by, order_type) {
+  static async get(page = 1, limit = 10, id, video, order_by = "created_at", order_type = "DESC") {
     const offset = (page - 1) * limit;
     const conditions = [];
 
