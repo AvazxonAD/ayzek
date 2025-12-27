@@ -64,7 +64,7 @@ class PostDB {
     const total = parseInt(countResult[0].total);
     const totalPages = Math.ceil(total / limit);
 
-
+    const next = result.length ? `${result[result.length - 1]?.id},${order_by === "created_at" ? result[result.length - 1]?.created_at.toISOString() : result[result.length - 1]?.see}` : null
     return {
       data: result,
       pagination: {
@@ -74,7 +74,7 @@ class PostDB {
         totalPages,
         hasNext: page < totalPages,
         hasPrev: page > 1,
-        next_token: `${result[result.length - 1]?.id},${order_by === "created_at" ? result[result.length - 1]?.created_at.toISOString() : result[result.length - 1]?.see}`,
+        next_token: next,
       },
     };
   }
