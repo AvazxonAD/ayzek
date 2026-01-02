@@ -12,7 +12,7 @@ class PostController {
 
   static async getById(req, res) {
     const { id } = req.params;
-    const result = await PostService.getById(id);
+    const result = await PostService.getById(id, req.user);
     return res.success(result, req.t("post.get_success"));
   }
 

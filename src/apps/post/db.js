@@ -1,6 +1,22 @@
 const { db } = require("../../config/db/index");
 
 class PostDB {
+  static async createUserPost(params) {
+    const query = `INSERT INTO user_post (user_id, post_id) VALUES ($1, $2) RETURNING *`;
+
+    const result = await db.query(query, params);
+
+    return result[0];
+  }
+
+  static async getUserPost(params) {
+    const query = `SELECT * FROM user_post WHERE user_id = $1 AND post_id = $2`;
+
+    const result = await db.query(query, params);
+
+    return result[0];
+  }
+
   static async updateSeeCount(params) {
     const query = `UPDATE posts SET see = see + 1 WHERE id = $1 RETURNING *`;
 

@@ -19,7 +19,7 @@ class PostService {
     return result;
   }
 
-  static async getById(id) {
+  static async getById(id, user) {
     const post = await PostDB.getById(id);
     if (!post) {
       throw new ErrorResponse("post.not_found", 404);
@@ -30,8 +30,16 @@ class PostService {
     post.video = post.video ? `${baseUrl}/post/videos/${post.video}` : null;
     post.gif = post.gif ? `${baseUrl}/post/gifs/${post.gif}` : null;
 
-    const { see } = await PostDB.updateSeeCount([post.id]);
-    post.see = see;
+
+    if (user) {
+      const check = await PostDB.getUserPost([user.id, post.id]);
+      if (!check) {
+        await PostDB.createUserPost([user.id, post.id]);
+        const { see } = await PostDB.updateSeeCount([post.id]);
+        post.see = see;
+      }
+
+    }
 
     return post;
   }
