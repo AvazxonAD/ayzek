@@ -25,7 +25,7 @@ class PostDB {
     return result[0];
   }
 
-  static async get(page = 1, limit = 10, id, video, order_by = "created_at", order_type = "DESC") {
+  static async get(page = 1, limit = 10, id, video, order_by = "created_at", order_type = "DESC", next_token) {
     const offset = (page - 1) * limit;
     const conditions = [];
 
@@ -35,32 +35,36 @@ class PostDB {
 
     const where = conditions.length > 0 ? `AND ${conditions.join(" AND ")}` : "";
 
+    next_token = next_token ? order_by === "created_at" ? `${next_token.split(",")[0]},'${next_token.split(",")[1]}'` : next_token : "";
+
+
     const [result, countResult] = await Promise.all([
       db.query(
         `
-        SELECT
-          p.*,
-          c.name as category_name,
-          COALESCE(
-              (
-                SELECT 
-                  JSON_AGG(JSON_BUILD_OBJECT(
-                    'id', tg.id,
-                    'tag_name', t.name
-                  ))
-                FROM post_tags tg
-                JOIN tags t ON t.id = tg.tag_id
-                WHERE tg.post_id = p.id
-                  AND tg.is_active = true
-                LIMIT 1
-            ), '[]'::JSON) AS tags
-        FROM posts p
-        LEFT JOIN categories c ON p.category_id = c.id
-        WHERE p.is_active = true
-          ${id ? `AND p.id != ${id}` : ""}
-          ${where}
-        ORDER BY p.${order_by} ${order_type}
-        LIMIT $1 OFFSET $2
+          SELECT
+            p.*,
+            c.name as category_name,
+            COALESCE(
+                (
+                  SELECT 
+                    JSON_AGG(JSON_BUILD_OBJECT(
+                      'id', tg.id,
+                      'tag_name', t.name
+                    ))
+                  FROM post_tags tg
+                  JOIN tags t ON t.id = tg.tag_id
+                  WHERE tg.post_id = p.id
+                    AND tg.is_active = true
+                  LIMIT 1
+              ), '[]'::JSON) AS tags
+          FROM posts p
+          LEFT JOIN categories c ON p.category_id = c.id
+          WHERE p.is_active = true
+            ${id ? `AND p.id != ${id}` : ""}
+            ${where}
+            ${next_token ? `AND (p.${order_by} ${order_type === "DESC" ? "<" : ">"} ${next_token.split(",")[1]} AND (p.${order_by} ${order_type === "DESC" ? "<" : ">"} ${next_token.split(",")[1]} AND p.id ${order_type === "DESC" ? "<" : ">"} ${next_token.split(",")[0]}))` : ""}
+          ORDER BY p.${order_by} ${order_type}, p.id ${order_type}
+          LIMIT $1 OFFSET $2
       `,
         [limit, offset]
       ),
@@ -76,6 +80,7 @@ class PostDB {
     const total = parseInt(countResult[0].total);
     const totalPages = Math.ceil(total / limit);
 
+    const next = result.length ? `${result[result.length - 1]?.id},${order_by === "created_at" ? result[result.length - 1]?.created_at.toISOString() : result[result.length - 1]?.see}` : null
     return {
       data: result,
       pagination: {
@@ -85,6 +90,7 @@ class PostDB {
         totalPages,
         hasNext: page < totalPages,
         hasPrev: page > 1,
+        next_token: next,
       },
     };
   }

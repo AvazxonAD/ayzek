@@ -5,8 +5,8 @@ const { db } = require("../../config/db");
 const { TagService } = require("../tag/service");
 
 class PostService {
-  static async get(page = 1, limit = 10, id, video, order_by, order_type) {
-    const result = await PostDB.get(page, limit, id, video, order_by, order_type);
+  static async get(page = 1, limit = 10, id, video, order_by, order_type, next_token) {
+    const result = await PostDB.get(page, limit, id, video, order_by, order_type, next_token);
 
     const baseUrl = process.env.BASE_URL;
     result.data = result.data.map((post) => ({

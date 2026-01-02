@@ -17,6 +17,7 @@ class PostSchema {
         video: Joi.boolean().optional().default(false),
         order_by: Joi.string().valid("see", "created_at").allow(""),
         order_type: Joi.string().trim().valid("ASC", "DESC").allow(""),
+        next_token: Joi.string().allow(""),
       }),
     }).options({ stripUnknown: true });
   }
