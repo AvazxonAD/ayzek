@@ -1,0 +1,1 @@
+alter table background_color drop column color; 

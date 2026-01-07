@@ -13,14 +13,21 @@ class BackgroundColorController {
         return res.success(result, req.t("background_color.get_success"));
     }
 
+    static async getFile(req, res) {
+        const { id } = req.params;
+        const { file, contentType } = await BackgroundColorService.getFile(id);
+        res.setHeader("Content-Type", contentType);
+        return res.send(file);
+    }
+
     static async create(req, res) {
-        const result = await BackgroundColorService.create(req.body);
+        const result = await BackgroundColorService.create(req.file, req.body);
         return res.success(result, req.t("background_color.create_success"));
     }
 
     static async update(req, res) {
         const { id } = req.params;
-        const result = await BackgroundColorService.update(id, req.body);
+        const result = await BackgroundColorService.update(id, req.file, req.body);
         return res.success(result, req.t("background_color.update_success"));
     }
 

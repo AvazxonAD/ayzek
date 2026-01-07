@@ -19,12 +19,7 @@ class BackgroundColorSchema {
     static createSchema() {
         return Joi.object({
             body: Joi.object({
-                color: Joi.string().required().messages({
-                    'any.required': 'validation.color.required',
-                    'string.empty': 'validation.color.empty'
-                }),
                 active: Joi.boolean().optional().default(true),
-                is_active: Joi.boolean().optional().default(true)
             })
         }).options({ stripUnknown: true });
     }
@@ -38,11 +33,7 @@ class BackgroundColorSchema {
                 })
             }),
             body: Joi.object({
-                color: Joi.string().optional().messages({
-                    'string.empty': 'validation.color.empty'
-                }),
                 active: Joi.boolean().optional(),
-                is_active: Joi.boolean().optional()
             })
         }).options({ stripUnknown: true });
     }

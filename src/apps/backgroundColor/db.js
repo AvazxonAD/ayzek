@@ -7,8 +7,10 @@ class BackgroundColorDB {
     const [result, countResult] = await Promise.all([
       db.query(
         `
-        SELECT id, color, active, is_active, created_at, updated_at 
-        FROM background_color 
+        SELECT 
+          *,
+          '${process.env.BASE_URL}/background-color/' || id || '/' || 'file' AS file_url
+        FROM background_color
         ORDER BY created_at DESC
         LIMIT $1 OFFSET $2
       `,
@@ -36,8 +38,8 @@ class BackgroundColorDB {
   static async getById(id) {
     const result = await db.query(
       `
-      SELECT id, color, active, is_active, created_at, updated_at 
-      FROM background_color 
+      SELECT id, file, active, is_active, created_at, updated_at,  '${process.env.BASE_URL}/background-color/' || id || '/' || 'file' AS file_url
+      FROM background_color
       WHERE id = $1
     `,
       [id]
@@ -46,14 +48,14 @@ class BackgroundColorDB {
   }
 
   static async create(data) {
-    const { color, active = true, is_active = true } = data;
+    const { file, active = true } = data;
     const result = await db.query(
       `
-      INSERT INTO background_color (color, active, is_active, created_at, updated_at) 
-      VALUES ($1, $2, $3, NOW(), NOW()) 
-      RETURNING id, color, active, is_active, created_at, updated_at
+      INSERT INTO background_color (file, active, created_at, updated_at)
+      VALUES ($1, $2, NOW(), NOW())
+      RETURNING id, file, active, created_at, updated_at
     `,
-      [color, active, is_active]
+      [file, active]
     );
     return result[0];
   }
@@ -63,9 +65,9 @@ class BackgroundColorDB {
     const values = [];
     let paramIndex = 1;
 
-    if (data.color !== undefined) {
-      fields.push(`color = $${paramIndex++}`);
-      values.push(data.color);
+    if (data.file !== undefined) {
+      fields.push(`file = $${paramIndex++}`);
+      values.push(data.file);
     }
 
     if (data.active !== undefined) {
@@ -73,19 +75,14 @@ class BackgroundColorDB {
       values.push(data.active);
     }
 
-    if (data.is_active !== undefined) {
-      fields.push(`is_active = $${paramIndex++}`);
-      values.push(data.is_active);
-    }
-
     fields.push(`updated_at = NOW()`);
     values.push(id);
 
     const query = `
-      UPDATE background_color 
-      SET ${fields.join(", ")} 
-      WHERE id = $${paramIndex} 
-      RETURNING id, color, active, is_active, created_at, updated_at
+      UPDATE background_color
+      SET ${fields.join(", ")}
+      WHERE id = $${paramIndex}
+      RETURNING id, file, active, is_active, created_at, updated_at
     `;
 
     const result = await db.query(query, values);
