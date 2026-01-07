@@ -1,0 +1,1 @@
+alter table background_color add column file varchar(1000);
