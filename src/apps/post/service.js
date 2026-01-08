@@ -5,8 +5,8 @@ const { db } = require("../../config/db");
 const { TagService } = require("../tag/service");
 
 class PostService {
-  static async get(page = 1, limit = 10, id, video, order_by, order_type, next_token) {
-    const result = await PostDB.get(page, limit, id, video, order_by, order_type, next_token);
+  static async get(page = 1, limit = 10, id, video, order_by, order_type, next_token, category_id) {
+    const result = await PostDB.get(page, limit, id, video, order_by, order_type, next_token, category_id);
 
     const baseUrl = process.env.BASE_URL;
     result.data = result.data.map((post) => ({
@@ -30,7 +30,6 @@ class PostService {
     post.video = post.video ? `${baseUrl}/post/videos/${post.video}` : null;
     post.gif = post.gif ? `${baseUrl}/post/gifs/${post.gif}` : null;
 
-
     if (user) {
       const check = await PostDB.getUserPost([user.id, post.id]);
       if (!check) {
@@ -38,7 +37,6 @@ class PostService {
         const { see } = await PostDB.updateSeeCount([post.id]);
         post.see = see;
       }
-
     }
 
     return post;

@@ -18,6 +18,7 @@ class PostSchema {
         order_by: Joi.string().valid("see", "created_at").allow(""),
         order_type: Joi.string().trim().valid("ASC", "DESC").allow(""),
         next_token: Joi.string().allow(""),
+        category_id: Joi.number().min(1).required().integer().allow(""),
       }),
     }).options({ stripUnknown: true });
   }
