@@ -35,6 +35,18 @@ exports.Schema = class {
     });
   }
 
+  static updateStatus() {
+    return Joi.object({
+      body: Joi.object({
+        status: Joi.boolean().required(),
+      }),
+
+      params: Joi.object({
+        id: Joi.number().min(1).integer().required(),
+      }),
+    });
+  }
+
   static getById() {
     return Joi.object({
       params: Joi.object({

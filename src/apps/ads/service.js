@@ -6,6 +6,12 @@ const fs = require("node:fs/promises");
 const mime = require("mime-types");
 
 exports.AdsService = class {
+  static async updateStatus(data) {
+    await this.getById(data);
+    const result = await AdsDB.updateStatus([data.status, data.id]);
+    return result;
+  }
+
   static async getFile(data) {
     const file_path = path.join(__dirname, "../../../public/uploads/", data.file_name);
 

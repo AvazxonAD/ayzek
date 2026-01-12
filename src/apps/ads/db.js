@@ -80,4 +80,12 @@ exports.AdsDB = class {
 
     return result[0];
   }
+
+  static async updateStatus(params) {
+    const query = `UPDATE ads SET status = $1 WHERE id = $2 RETURNING *`;
+
+    const result = await db.query(query, params);
+
+    return result[0];
+  }
 };

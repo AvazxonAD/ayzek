@@ -3,6 +3,11 @@ const { AdsService } = require("./service");
 exports.Controller = class {
   static now = new Date();
 
+  static async updateStatus(req, res) {
+    const result = await AdsService.updateStatus({ ...req.params, ...req.body });
+    return res.success(result, req.t("system.update_success"));
+  }
+
   static async create(req, res) {
     const result = await AdsService.create({ ...req.body, file: req.file });
 
