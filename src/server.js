@@ -19,7 +19,7 @@ app.use(
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"],
     allowedHeaders: "*",
     exposedHeaders: "*",
-  })
+  }),
 );
 app.options("*", cors());
 
@@ -37,7 +37,7 @@ app.use((req, res, next) => {
 });
 
 // API Routes
-app.use("/", routes);
+app.use("/backend", routes);
 
 app.use(errorHandler);
 
