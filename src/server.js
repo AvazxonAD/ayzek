@@ -37,7 +37,7 @@ app.use((req, res, next) => {
 });
 
 // API Routes
-app.use("/backend", routes);
+app.use("/", routes);
 
 app.use(errorHandler);
 
