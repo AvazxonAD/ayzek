@@ -37,6 +37,12 @@ app.use((req, res, next) => {
 });
 
 // API Routes
+
+app.use((req, res, next) => {
+  console.log(req.method, req.url);
+  next();
+});
+
 app.use("/", routes);
 
 app.use(errorHandler);
