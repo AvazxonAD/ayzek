@@ -22,7 +22,7 @@ function checkImageFileType(file, cb) {
 
 exports.uploadImage = multer({
   storage: imageStorage,
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+  limits: { fileSize: 100 * 1024 * 1024 }, // 100MB
   fileFilter: function (req, file, cb) {
     checkImageFileType(file, cb);
   },
