@@ -11,6 +11,7 @@ const GifRoutes = require("./gif/index");
 const AdsRoutes = require("./ads/index");
 const SwearWordsRoutes = require("./swearWords");
 const BackgroundColorRoutes = require("./backgroundColor");
+const InfoRoutes = require("./info");
 
 const router = express.Router();
 
@@ -27,5 +28,6 @@ router.use("/account", AccountRoutes);
 router.use("/comment", CommentRoutes);
 router.use("/swear-words", SwearWordsRoutes);
 router.use("/background-color", BackgroundColorRoutes);
+router.use("/info", InfoRoutes);
 
 module.exports = router;

@@ -7,6 +7,11 @@ const { upload } = require("../../middleware/upload");
 
 const router = express.Router();
 
+// Routes including all language fields (for admin) - MUST be before /:id routes
+router.get("/all", validator(Controller.getAll, Schema.get()));
+router.get("/all/:id", validator(Controller.getByIdAdmin, Schema.getById()));
+
+// Routes with language support (for frontend)
 router.get("/", validator(Controller.get, Schema.get()));
 router.get("/file/:file_name", validator(Controller.getFile, Schema.getFile()));
 router.get("/:id", validator(Controller.getById, Schema.getById()));

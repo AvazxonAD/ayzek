@@ -4,8 +4,8 @@ const dotenv = require("dotenv");
 const { Db } = require("./config/db/index");
 const errorHandler = require("./middleware/errorHandler");
 const responseHandler = require("./middleware/responseHandler");
-const i18n = require("./config/i18n");
 const routes = require("./apps");
+const i18next = require("../i18next");
 require("colors");
 
 dotenv.config();
@@ -26,7 +26,12 @@ app.options("*", cors());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
-app.use(i18n.init);
+app.use(i18next, (req, res, next) => {
+  req.i18n.changeLanguage(req.headers["x-app-lang"]);
+
+  next();
+});
+
 app.use(responseHandler);
 
 app.use((req, res, next) => {
@@ -39,7 +44,7 @@ app.use((req, res, next) => {
 // API Routes
 
 app.use((req, res, next) => {
-  console.log(req.method, req.url);
+  // console.log(req.method, req.url);
   next();
 });
 

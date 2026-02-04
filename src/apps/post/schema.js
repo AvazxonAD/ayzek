@@ -26,18 +26,30 @@ class PostSchema {
   static createSchema() {
     return Joi.object({
       body: Joi.object({
+        // Title fields
         title: Joi.string().min(1).max(255).required().messages({
           "string.min": "validation.title.min",
           "string.max": "validation.title.max",
           "any.required": "validation.title.required",
         }),
+        title_uz: Joi.string().max(255).allow(null, "").optional(),
+        title_ru: Joi.string().max(255).allow(null, "").optional(),
+        title_en: Joi.string().max(255).allow(null, "").optional(),
+        // Description fields
         description: Joi.string().optional().allow("").messages({
           "string.base": "validation.description.invalid",
         }),
+        description_uz: Joi.string().allow(null, "").optional(),
+        description_ru: Joi.string().allow(null, "").optional(),
+        description_en: Joi.string().allow(null, "").optional(),
+        // Content fields
         content: Joi.string().min(1).required().messages({
           "string.min": "validation.content.min",
           "any.required": "validation.content.required",
         }),
+        content_uz: Joi.string().allow(null, "").optional(),
+        content_ru: Joi.string().allow(null, "").optional(),
+        content_en: Joi.string().allow(null, "").optional(),
         category_id: Joi.number().integer().positive().optional().messages({
           "number.positive": "validation.category_id.positive",
           "number.base": "validation.category_id.invalid",
@@ -62,16 +74,28 @@ class PostSchema {
         }),
       }),
       body: Joi.object({
+        // Title fields
         title: Joi.string().min(1).max(255).optional().messages({
           "string.min": "validation.title.min",
           "string.max": "validation.title.max",
         }),
+        title_uz: Joi.string().max(255).allow(null, "").optional(),
+        title_ru: Joi.string().max(255).allow(null, "").optional(),
+        title_en: Joi.string().max(255).allow(null, "").optional(),
+        // Description fields
         description: Joi.string().optional().allow("").messages({
           "string.base": "validation.description.invalid",
         }),
+        description_uz: Joi.string().allow(null, "").optional(),
+        description_ru: Joi.string().allow(null, "").optional(),
+        description_en: Joi.string().allow(null, "").optional(),
+        // Content fields
         content: Joi.string().min(1).optional().messages({
           "string.min": "validation.content.min",
         }),
+        content_uz: Joi.string().allow(null, "").optional(),
+        content_ru: Joi.string().allow(null, "").optional(),
+        content_en: Joi.string().allow(null, "").optional(),
         category_id: Joi.number().integer().positive().optional().messages({
           "number.positive": "validation.category_id.positive",
           "number.base": "validation.category_id.invalid",

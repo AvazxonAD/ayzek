@@ -20,14 +20,32 @@ exports.Controller = class {
     return res.success(result, req.t("system.update_success"));
   }
 
+  // Get ad by ID with language support (for frontend)
   static async getById(req, res) {
-    const result = await AdsService.getById(req.params);
+    const lang = req.headers["x-app-lang"] || "uz";
+    const result = await AdsService.getById(req.params, lang);
 
     return res.success(result, req.t("system.get_success"));
   }
 
+  // Get ad by ID including all language fields (for admin)
+  static async getByIdAdmin(req, res) {
+    const result = await AdsService.getByIdAdmin(req.params);
+
+    return res.success(result, req.t("system.get_success"));
+  }
+
+  // Get ads with language support (for frontend)
   static async get(req, res) {
-    const { data, meta } = await AdsService.get(req.query);
+    const lang = req.headers["x-app-lang"] || "uz";
+    const { data, meta } = await AdsService.get(req.query, lang);
+
+    return res.success(data, req.t("system.get_success"), 200, meta);
+  }
+
+  // Get all ads including all language fields (for admin)
+  static async getAll(req, res) {
+    const { data, meta } = await AdsService.getAll(req.query);
 
     return res.success(data, req.t("system.get_success"), 200, meta);
   }

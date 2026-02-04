@@ -25,9 +25,14 @@ class PostDB {
     return result[0];
   }
 
-  static async get(page = 1, limit = 10, id, video, order_by = "created_at", order_type = "DESC", next_token, category_id) {
+  // Get posts with language support (for frontend)
+  static async get(page = 1, limit = 10, id, video, order_by = "created_at", order_type = "DESC", next_token, category_id, lang = "uz") {
     const offset = (page - 1) * limit;
     const conditions = [];
+
+    // Validate language to prevent SQL injection
+    const validLangs = ["uz", "ru", "en"];
+    const safeLang = validLangs.includes(lang) ? lang : "uz";
 
     if (video) {
       conditions.push(`p.video IS NOT NULL`);
@@ -45,8 +50,20 @@ class PostDB {
       db.query(
         `
           SELECT
-            p.*,
-            c.name as category_name,
+            p.id,
+            COALESCE(p.title_${safeLang}, p.title) AS title,
+            COALESCE(p.description_${safeLang}, p.description) AS description,
+            COALESCE(p.content_${safeLang}, p.content) AS content,
+            p.image,
+            p.video,
+            p.gif,
+            p.category_id,
+            p.fio,
+            p.see,
+            p.is_active,
+            p.created_at,
+            p.updated_at,
+            COALESCE(c.name_${safeLang}, c.name) as category_name,
             COALESCE(
                 (
                   SELECT 
@@ -106,14 +123,143 @@ class PostDB {
     };
   }
 
-  static async getById(id) {
+  // Get all posts including all language fields (for admin)
+  static async getAll(page = 1, limit = 10, id, video, order_by = "created_at", order_type = "DESC", next_token, category_id) {
+    const offset = (page - 1) * limit;
+    const conditions = [];
+
+    if (video) {
+      conditions.push(`p.video IS NOT NULL`);
+    }
+
+    if (category_id) {
+      conditions.push(`p.category_id = ${category_id}`);
+    }
+
+    const where = conditions.length > 0 ? `AND ${conditions.join(" AND ")}` : "";
+
+    next_token = next_token ? (order_by === "created_at" ? `${next_token.split(",")[0]},'${next_token.split(",")[1]}'` : next_token) : "";
+
+    const [result, countResult] = await Promise.all([
+      db.query(
+        `
+          SELECT
+            p.*,
+            c.name as category_name,
+            COALESCE(
+                (
+                  SELECT
+                    JSON_AGG(JSON_BUILD_OBJECT(
+                      'id', tg.id,
+                      'tag_name', t.name
+                    ))
+                  FROM post_tags tg
+                  JOIN tags t ON t.id = tg.tag_id
+                  WHERE tg.post_id = p.id
+                    AND tg.is_active = true
+                  LIMIT 1
+              ), '[]'::JSON) AS tags
+          FROM posts p
+          LEFT JOIN categories c ON p.category_id = c.id
+          WHERE p.is_active = true
+            ${id ? `AND p.id != ${id}` : ""}
+            ${where}
+            ${
+              next_token
+                ? `AND (p.${order_by} ${order_type === "DESC" ? "<" : ">"} ${next_token.split(",")[1]} AND (p.${order_by} ${
+                    order_type === "DESC" ? "<" : ">"
+                  } ${next_token.split(",")[1]} AND p.id ${order_type === "DESC" ? "<" : ">"} ${next_token.split(",")[0]}))`
+                : ""
+            }
+          ORDER BY p.${order_by} ${order_type}, p.id ${order_type}
+          LIMIT $1 OFFSET $2
+      `,
+        [limit, offset]
+      ),
+      db.query(`
+        SELECT
+          COALESCE(COUNT(p.id), 0) as total
+        FROM posts p
+        WHERE p.is_active = true
+          ${where}
+      `),
+    ]);
+
+    const total = parseInt(countResult[0].total);
+    const totalPages = Math.ceil(total / limit);
+
+    const next = result.length
+      ? `${result[result.length - 1]?.id},${order_by === "created_at" ? result[result.length - 1]?.created_at.toISOString() : result[result.length - 1]?.see}`
+      : null;
+    return {
+      data: result,
+      pagination: {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        total,
+        totalPages,
+        hasNext: page < totalPages,
+        hasPrev: page > 1,
+        next_token: next,
+      },
+    };
+  }
+
+  // Get post by ID with language support (for frontend)
+  static async getById(id, lang = "uz") {
+    // Validate language to prevent SQL injection
+    const validLangs = ["uz", "ru", "en"];
+    const safeLang = validLangs.includes(lang) ? lang : "uz";
+
+    const result = await db.query(
+      `
+      SELECT
+            p.id,
+            COALESCE(p.title_${safeLang}, p.title) AS title,
+            COALESCE(p.description_${safeLang}, p.description) AS description,
+            COALESCE(p.content_${safeLang}, p.content) AS content,
+            p.image,
+            p.video,
+            p.gif,
+            p.category_id,
+            p.fio,
+            p.see,
+            p.is_active,
+            p.created_at,
+            p.updated_at,
+            COALESCE(c.name_${safeLang}, c.name) as category_name,
+            COALESCE(
+              (
+                SELECT
+                  JSON_AGG(JSON_BUILD_OBJECT(
+                    'id', tg.id,
+                    'tag_name', t.name
+                  ))
+                FROM post_tags tg
+                JOIN tags t ON t.id = tg.tag_id
+                WHERE tg.post_id = p.id
+                  AND tg.is_active = true
+                LIMIT 1
+            ), '[]'::JSON) AS tags
+      FROM posts p
+      LEFT JOIN categories c ON p.category_id = c.id
+      WHERE p.id = $1
+        AND p.is_active = true
+    `,
+      [id]
+    );
+    return result[0] || null;
+  }
+
+  // Get post by ID including all language fields (for admin)
+  static async getByIdAll(id) {
     const result = await db.query(
       `
       SELECT p.*,
             c.name as category_name,
             COALESCE(
               (
-                SELECT 
+                SELECT
                   JSON_AGG(JSON_BUILD_OBJECT(
                     'id', tg.id,
                     'tag_name', t.name
@@ -137,8 +283,13 @@ class PostDB {
   static async create(params, client) {
     const result = await client.query(
       `
-      INSERT INTO posts (title, description, content, image, category_id, tags, fio, gif, video, created_at, updated_at) 
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW(), NOW()) 
+      INSERT INTO posts (
+        title, title_uz, title_ru, title_en,
+        description, description_uz, description_ru, description_en,
+        content, content_uz, content_ru, content_en,
+        image, category_id, tags, fio, gif, video, created_at, updated_at
+      )
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, NOW(), NOW())
       RETURNING *
     `,
       params
@@ -173,19 +324,58 @@ class PostDB {
     const values = [];
     let paramIndex = 1;
 
+    // Title fields
     if (data.title !== undefined) {
       fields.push(`title = $${paramIndex++}`);
       values.push(data.title);
     }
+    if (data.title_uz !== undefined) {
+      fields.push(`title_uz = $${paramIndex++}`);
+      values.push(data.title_uz);
+    }
+    if (data.title_ru !== undefined) {
+      fields.push(`title_ru = $${paramIndex++}`);
+      values.push(data.title_ru);
+    }
+    if (data.title_en !== undefined) {
+      fields.push(`title_en = $${paramIndex++}`);
+      values.push(data.title_en);
+    }
 
+    // Description fields
     if (data.description !== undefined) {
       fields.push(`description = $${paramIndex++}`);
       values.push(data.description);
     }
+    if (data.description_uz !== undefined) {
+      fields.push(`description_uz = $${paramIndex++}`);
+      values.push(data.description_uz);
+    }
+    if (data.description_ru !== undefined) {
+      fields.push(`description_ru = $${paramIndex++}`);
+      values.push(data.description_ru);
+    }
+    if (data.description_en !== undefined) {
+      fields.push(`description_en = $${paramIndex++}`);
+      values.push(data.description_en);
+    }
 
+    // Content fields
     if (data.content !== undefined) {
       fields.push(`content = $${paramIndex++}`);
       values.push(data.content);
+    }
+    if (data.content_uz !== undefined) {
+      fields.push(`content_uz = $${paramIndex++}`);
+      values.push(data.content_uz);
+    }
+    if (data.content_ru !== undefined) {
+      fields.push(`content_ru = $${paramIndex++}`);
+      values.push(data.content_ru);
+    }
+    if (data.content_en !== undefined) {
+      fields.push(`content_en = $${paramIndex++}`);
+      values.push(data.content_en);
     }
 
     if (data.image !== undefined) {
@@ -227,10 +417,10 @@ class PostDB {
     values.push(id);
 
     const query = `
-      UPDATE posts 
-      SET ${fields.join(", ")} 
-      WHERE id = $${paramIndex} 
-      RETURNING id, title, description, content, image, category_id, tags, fio, is_active, created_at, updated_at
+      UPDATE posts
+      SET ${fields.join(", ")}
+      WHERE id = $${paramIndex}
+      RETURNING *
     `;
 
     const result = await db.transaction(async (client) => {

@@ -1,15 +1,33 @@
 const { CategoryService } = require("./service");
 
 class CategoryController {
+  // Get categories with language support (for frontend)
   static async get(req, res) {
     const { page = 1, limit = 10 } = req.query;
-    const result = await CategoryService.getAllCategories(parseInt(page), parseInt(limit));
+    const lang = req.headers["x-app-lang"] || "uz";
+    const result = await CategoryService.getAllCategories(parseInt(page), parseInt(limit), lang);
     return res.success(result, req.t("category.get_all_success"));
   }
 
+  // Get all categories including all language fields (for admin)
+  static async getAll(req, res) {
+    const { page = 1, limit = 10 } = req.query;
+    const result = await CategoryService.getAllCategoriesAdmin(parseInt(page), parseInt(limit));
+    return res.success(result, req.t("category.get_all_success"));
+  }
+
+  // Get category by ID with language support (for frontend)
   static async getById(req, res) {
     const { id } = req.params;
-    const result = await CategoryService.getCategoryById(id);
+    const lang = req.headers["x-app-lang"] || "uz";
+    const result = await CategoryService.getCategoryById(id, lang);
+    return res.success(result, req.t("category.get_success"));
+  }
+
+  // Get category by ID including all language fields (for admin)
+  static async getByIdAdmin(req, res) {
+    const { id } = req.params;
+    const result = await CategoryService.getCategoryByIdAdmin(id);
     return res.success(result, req.t("category.get_success"));
   }
 

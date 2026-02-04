@@ -4,15 +4,33 @@ const fs = require("fs");
 const mime = require("mime-types");
 const { VIDEO_TYPE } = require("../constants/data/data");
 class PostController {
+  // Get posts with language support (for frontend)
   static async get(req, res) {
     const { page = 1, limit = 10, id, video, order_by = "created_at", order_type = "ASC", next_token, category_id } = req.query;
-    const result = await PostService.get(parseInt(page), parseInt(limit), id, video, order_by, order_type, next_token, category_id);
+    const lang = req.headers["x-app-lang"] || "uz";
+    const result = await PostService.get(parseInt(page), parseInt(limit), id, video, order_by, order_type, next_token, category_id, lang);
     return res.success(result, req.t("post.get_all_success"));
   }
 
+  // Get all posts including all language fields (for admin)
+  static async getAll(req, res) {
+    const { page = 1, limit = 10, id, video, order_by = "created_at", order_type = "ASC", next_token, category_id } = req.query;
+    const result = await PostService.getAll(parseInt(page), parseInt(limit), id, video, order_by, order_type, next_token, category_id);
+    return res.success(result, req.t("post.get_all_success"));
+  }
+
+  // Get post by ID with language support (for frontend)
   static async getById(req, res) {
     const { id } = req.params;
-    const result = await PostService.getById(id, req.user);
+    const lang = req.headers["x-app-lang"] || "uz";
+    const result = await PostService.getById(id, req.user, lang);
+    return res.success(result, req.t("post.get_success"));
+  }
+
+  // Get post by ID including all language fields (for admin)
+  static async getByIdAdmin(req, res) {
+    const { id } = req.params;
+    const result = await PostService.getByIdAdmin(id);
     return res.success(result, req.t("post.get_success"));
   }
 

@@ -24,6 +24,9 @@ class CategorySchema {
           'string.max': 'validation.name.max',
           'any.required': 'validation.name.required'
         }),
+        name_uz: Joi.string().max(255).allow(null, '').optional(),
+        name_ru: Joi.string().max(255).allow(null, '').optional(),
+        name_en: Joi.string().max(255).allow(null, '').optional(),
         is_active: Joi.boolean().optional().default(true)
       })
     }).options({ stripUnknown: true });
@@ -42,6 +45,9 @@ class CategorySchema {
           'string.min': 'validation.name.min',
           'string.max': 'validation.name.max'
         }),
+        name_uz: Joi.string().max(255).allow(null, '').optional(),
+        name_ru: Joi.string().max(255).allow(null, '').optional(),
+        name_en: Joi.string().max(255).allow(null, '').optional(),
         is_active: Joi.boolean().optional()
       })
     }).options({ stripUnknown: true });
